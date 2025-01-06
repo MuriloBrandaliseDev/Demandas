@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Página Inicial</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
+</head>
+
+<body>
+
+    <!-- Cabeçalho -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img class="animate__animated animate__fadeInDown" src="{% static 'usuarios/imagens/images3.png' %}"
+                    alt="Descrição da Imagem">
+            </div>
+
+            <!-- redes socias -->
+            <div  class="social-media">
+                <a class="animate__animated animate__fadeInDown" href="https://www.facebook.com/" class="hvr-grow" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a class="animate__animated animate__fadeInDown" href="https://www.instagram.com/" class="hvr-grow" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a class="animate__animated animate__fadeInDown" href="https://www.linkedin.com/" class="hvr-grow" target="_blank">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a class="animate__animated animate__fadeInDown" href="https://www.twitter.com/" class="hvr-grow" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+            
+            <!-- Login -->
+            <li class="animate__animated animate__fadeInDown login-item" style="display: inline-block;">
+                <a href="{% url 'login' %}" class="btn-login">
+                    <i class="fas fa-sign-in-alt default-icon"></i>
+                    <i class="fa-solid fa-person-running hidden-icon"></i>
+                    <span class="tooltip">Entrar</span>
+                </a>
+            </li>
+        </nav>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main>
+        <section id="hero">
+            <div  class="hero-content">
+                <h2 style="color: #22472c;">SISTEMA DE DEMANDAS <span style="color: #16732f;">QUEROLAR</span></h2>
+                <p>
+                    Use o Sistema de Demandas Querolar para gerenciar suas atividades de forma eficiente e
+                    simplificada.<span style="color: #16732f; font-weight: bold; font-size: 20px;"> ACESSE AGORA!</span>
+                    Se ainda não possui cadastro, clique abaixo e tenha acesso imediato às
+                    ferramentas.
+                </p>
+                <a class="botão" href="{% url 'registro' %}">Acesse agora<i class="fas fa-right-to-bracket"
+                        style="margin-left: 8px;"></i></a>
+            </div>
+
+            <div class="hero-image">
+                <img src="{% static 'usuarios/imagens/imagesFrase.jpg' %}" alt="Descrição da Imagem">
+            </div>
+        </section>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+        <script>AOS.init();</script>
+        <script src="{% static 'usuarios/js/scripts.js' %}"></script>
+        <script>
+            // Seleciona o ícone do hambúrguer, o overlay, o menu e o botão de fechar
+            const hamburger = document.getElementById('hamburger');
+            const overlay = document.getElementById('overlay');
+            const navLinks = document.getElementById('nav-links');
+            const closeMenu = document.getElementById('close-menu');
+
+            // Função para abrir/fechar o menu e ativar o overlay
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            // Função para fechar o menu quando o "X" for clicado
+            closeMenu.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            // Fechar o menu clicando no overlay
+            overlay.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+        </script>
+    </main>
+</body>
+
+</html>

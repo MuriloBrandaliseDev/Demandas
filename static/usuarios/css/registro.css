@@ -1,0 +1,298 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+
+/* Reset padrão para margin e padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilização básica do body */
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Sugestões de nome de usuário */
+#username-suggestions {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/* Estilização para inputs inválidos */
+.is-invalid {
+    border-color: red;
+}
+
+/* Background shapes animadas */
+.background-shape {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #84f6d8cc;
+    animation: float 8s ease-in-out infinite;
+}
+
+/* Tamanhos e posições específicas das formas */
+.shape-1 { width: 250px; height: 250px; top: -50px; left: -50px; }
+.shape-11 { width: 180px; height: 180px; top: -15px; left: -15px; background-color: #3d6f625c; }
+.shape-2 { width: 300px; height: 300px; bottom: -100px; right: -100px; }
+.shape-3 { width: 150px; height: 150px; bottom: 50px; left: 50px; }
+.shape-4 { width: 150px; height: 150px; top: 10px; right: 15%; }
+.shape-5 { width: 80px; height: 80px; top: 40%; background-color: #84f6d83d; left: 25%; }
+.shape-6 { width: 80px; height: 80px; bottom: 20%; right: 30%; background-color: #84f6d839; }
+.shape-7 { width: 200px; height: 200px; bottom: -40px; right: -40px; background-color: #3d6f625c; }
+.shape-8 { width: 100px; height: 100px; bottom: 75px; left: 75px; background-color: #3d6f625c; }
+.shape-9 { width: 100px; height: 100px; top: 35px; right: 254px; background-color: #3d6f625c; }
+
+/* Animação de flutuação */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(30px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Container do formulário de registro */
+.registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+    z-index: 99999;
+}
+
+
+
+/* Estilização do bloco de mensagem */
+.message-block {
+    background-color: #d4edda; /* Fundo verde claro para sucesso */
+    border-left: 6px solid #28a745; /* Borda verde */
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Estilo do texto da mensagem */
+.message-text {
+    color: #155724; /* Texto verde para sucesso */
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+form {
+    padding: 0% 5%;
+}
+
+/* Container principal do formulário */
+.form-box {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 30px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+}
+
+/* Imagem no topo do formulário */
+.form-box img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Título do formulário */
+h1 {
+    margin-bottom: 1.5rem;
+    color: #1e5425;
+    font-size: 24px;
+}
+
+/* Grupo de inputs */
+.form-group {
+    display: flex;
+    position: relative;
+    flex-direction: column; /* Organiza os itens verticalmente */
+    margin-bottom: 0.9rem;
+}
+
+
+/* Estilo dos labels dos inputs */
+.form-group label {
+    position: absolute;
+    left: -25px; /* Coloca o ícone no lado esquerdo do input */
+    top: 55%;
+    transform: translateY(-50%);
+    font-size: 1rem; /* Tamanho do ícone */
+    color: #333;
+}
+
+/* Estilo dos inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 0.5rem;
+    padding-right: 40px; /* Espaço para o ícone do olho */
+    border: 1px solid #1e5425;
+    border-radius: 30px;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: #84bf78;
+}
+
+/* Estilo do ícone de mostrar/ocultar senha */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 60%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #555;
+    z-index: 2;
+}
+
+.toggle-password:hover { color: #000; }
+
+
+/* Estilo do botão de submissão */
+.btn-submit {
+    display: inline-block;
+    padding: 12px 30px;
+    margin: 10px;
+    background-color: #22472c;
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+    background-color: #1e824c;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+/* Estilo dos parágrafos */
+p {
+    margin-top: 1rem;
+    color: #777;
+}
+
+p a {
+    color: #22472c;
+    text-decoration: none;
+}
+
+p a:hover { text-decoration: none; }
+
+/* Estilo do botão de voltar ao login */
+.btn-voltarLogin {
+    color: #1e5425;
+}
+
+.btn-voltarLogin:hover { text-decoration: underline; }
+
+
+/* Estilo para telas menores (tablets e mobile) */
+@media screen and (max-width: 768px) {
+    /* Ajuste para o container do formulário */
+    .registro-container {
+        width: 95%;
+        height: auto;
+        padding: 20px;
+        border: solid 2px #1e5425;
+        border-radius: 20px;
+    }
+
+    form{
+        padding: 0% 10%;
+        
+    }
+
+
+    /* Reduz o tamanho do formulário */
+    .form-box {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    /* Ajuste do tamanho das imagens no formulário */
+    .form-box img {
+        width: 150px;
+    }
+
+    /* Ajuste dos títulos para caber em telas menores */
+    h1 {
+        font-size: 20px;
+    }
+
+    /* Ajusta o tamanho dos inputs e botões */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    .btn-submit {
+        font-size: 0.9rem;
+        padding: 10px;
+       
+    }
+
+    /* Ajuste de tamanho e posicionamento do ícone de olho nas senhas */
+    .toggle-password {
+        font-size: 1rem;
+        right: 10px;
+    }
+}
+
+/* Estilo para telas bem pequenas (celulares) */
+@media screen and (max-width: 480px) {
+    /* Diminui o tamanho das formas no fundo */
+    .background-shape {
+        width: 150px;
+        height: 150px;
+        display: none;
+    }
+    body {
+        background: radial-gradient(circle at 50% 50%, #1e5425, #84f6d8, #1e824c);
+        background-size: 150% 150%;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Fixa o fundo para um efeito de movimento */
+    }
+
+    /* Ajustes nos inputs e botão para mobile */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    .btn-submit {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    /* Diminui o tamanho do ícone de olho */
+    .toggle-password {
+        font-size: 0.9rem;
+    }
+
+    /* Ajuste para os botões e margens */
+    .btn-submit {
+        margin: 5px;
+        padding: 8px 20px;
+    }
+}

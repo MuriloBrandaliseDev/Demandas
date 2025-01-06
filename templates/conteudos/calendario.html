@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário de Demandas</title>
+    <style>
+        /* Reset de estilos básicos */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f7f7f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .calendar {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1d7926;
+            color: white;
+            padding: 20px;
+        }
+
+        .calendar-header .month-year {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .calendar-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .calendar-header button:hover {
+            transform: scale(1.2);
+        }
+
+        .calendar-body {
+            padding: 20px;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .weekdays div {
+            padding: 10px 0;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 10px;
+            height: 100px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .day:hover {
+            background-color: #e0ffe0;
+            transform: translateY(-2px);
+        }
+
+        .day.inactive {
+            background-color: #ddd;
+            color: #999;
+            cursor: default;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .events {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .event {
+            background-color: #1d7926;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        /* Scrollbar personalizada para eventos */
+        .events::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .events::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+
+        .events::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .calendar-header .month-year {
+                font-size: 1.2em;
+            }
+
+            .calendar-header button {
+                font-size: 1.2em;
+            }
+
+            .day {
+                height: 80px;
+                padding: 5px;
+            }
+
+            .event {
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar">
+        <div class="calendar-header">
+            <button id="prev-month">&#10094;</button>
+            <div class="month-year" id="month-year">Janeiro 2025</div>
+            <button id="next-month">&#10095;</button>
+        </div>
+        <div class="calendar-body">
+            <div class="weekdays">
+                <div>Dom</div>
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+            </div>
+            <div class="days" id="days">
+                <!-- Dias serão gerados via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lista de meses
+        const months = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+
+        // Data atual
+        let today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
+
+        // Função para gerar o calendário
+        function generateCalendar(month, year) {
+            const monthYear = document.getElementById('month-year');
+            const daysContainer = document.getElementById('days');
+
+            // Atualiza o mês e o ano no cabeçalho
+            monthYear.innerHTML = `${months[month]} ${year}`;
+
+            // Limpa os dias anteriores
+            daysContainer.innerHTML = '';
+
+            // Primeiro dia do mês
+            const firstDay = new Date(year, month, 1).getDay();
+
+            // Quantidade de dias no mês
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Quantidade de dias no mês anterior
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            // Preenche os dias do mês anterior que aparecem no calendário
+            for (let i = firstDay; i > 0; i--) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day', 'inactive');
+                dayDiv.innerHTML = `<div class="day-number">${daysInPrevMonth - i + 1}</div>`;
+                daysContainer.appendChild(dayDiv);
+            }
+
+            // Preenche os dias do mês atual
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.innerHTML = `<div class="day-number">${i}</div><div class="events"></div>`;
+
+                // Adiciona evento de clique
+                dayDiv.addEventListener('click', function() {
+                    alert(`Dia selecionado: ${i}/${month + 1}/${year}`);
+                });
+
+                // Aqui você pode integrar com suas demandas para adicionar eventos reais
+                // Exemplo fictício de demanda
+                // Remova ou adapte conforme necessário
+                /*
+                if (temDemanda(i, month, year)) {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('event');
+                    eventDiv.innerText = 'Demanda 1';
+                    dayDiv.querySelector('.events').appendChild(eventDiv);
+                }
+                */
+
+                daysContainer.appendChild(dayDiv);
+            }
+
+            // Preenche os dias do próximo mês que aparecem no calendário
+            const totalDays = firstDay + daysInMonth;
+            const nextDays = totalDays > 35 ? 42 - totalDays : 35 - totalDays;
+
+            for (let i = 1; i <= nextDays; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day', 'inactive');
+                dayDiv.innerHTML = `<div class="day-number">${i}</div>`;
+                daysContainer.appendChild(dayDiv);
+            }
+
+            // Aqui você pode chamar uma função para adicionar demandas ao calendário
+            // Por exemplo: adicionarDemandas(month, year);
+        }
+
+        // Inicializa o calendário com o mês atual
+        generateCalendar(currentMonth, currentYear);
+
+        // Botões de navegação
+        document.getElementById('prev-month').addEventListener('click', function() {
+            currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+            currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        document.getElementById('next-month').addEventListener('click', function() {
+            currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+            currentMonth = (currentMonth + 1) % 12;
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        // Função fictícia para verificar se há demandas no dia
+        // Substitua por lógica real conforme necessário
+        function temDemanda(dia, mes, ano) {
+            // Exemplo: Retorna true para o dia 15 de qualquer mês
+            return dia === 15;
+        }
+
+        // Função para adicionar demandas reais ao calendário
+        function adicionarDemandas(month, year) {
+            // Exemplo: Suponha que você tenha uma lista de demandas disponíveis em uma variável 'demandas'
+            const demandas = [
+                { dia: 5, titulo: 'Demanda A' },
+                { dia: 15, titulo: 'Demanda B' },
+                { dia: 20, titulo: 'Demanda C' },
+            ];
+
+            demandas.forEach(demanda => {
+                if (demanda.dia >=1 && demanda.dia <= 31) { // Validação simples
+                    const dayDivs = document.querySelectorAll('.day');
+                    dayDivs.forEach(dayDiv => {
+                        const dayNumber = parseInt(dayDiv.querySelector('.day-number').innerText);
+                        if (dayNumber === demanda.dia && !dayDiv.classList.contains('inactive')) {
+                            const eventDiv = document.createElement('div');
+                            eventDiv.classList.add('event');
+                            eventDiv.innerText = demanda.titulo;
+                            dayDiv.querySelector('.events').appendChild(eventDiv);
+
+                            // Opcional: Adicionar evento de clique no evento
+                            eventDiv.addEventListener('click', function(e) {
+                                e.stopPropagation(); // Evita que o clique no evento acione o clique no dia
+                                alert(`Detalhes da demanda: ${demanda.titulo}`);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // Chame a função para adicionar demandas após gerar o calendário
+        adicionarDemandas(currentMonth, currentYear);
+    </script>
+
+    <!-- Dentro do <body>, logo após a div do calendário -->
+<script id="demandas-data" type="application/json">
+    {{ demandas|json_script:"demandas-data" }}
+    oi
+</script>
+
+
+</body>
+</html>

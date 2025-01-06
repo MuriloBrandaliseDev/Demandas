@@ -1,0 +1,557 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Formas de fundo */
+.background-shape {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #22472cea;
+    animation: float 8s ease-in-out infinite;
+}
+
+.shape-1 {
+    width: 250px;
+    height: 250px;
+    top: -50px;
+    left: -50px;
+}
+
+.shape-11 {
+    width: 180px;
+    height: 180px;
+    top: -15px;
+    left: -15px;
+    background-color: #84f6d876;
+}
+
+.btn-google{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a501f;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-google:hover{
+    background-color: #1e824c;
+
+}
+
+.shape-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    right: -100px;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    bottom: 50px;
+    left: 50px;
+}
+
+.shape-4 {
+    width: 150px;
+    height: 150px;
+    top: 10px;
+    right: 15%;
+}
+
+.shape-5 {
+    width: 80px;
+    height: 80px;
+    top: 40%;
+    background-color: #84f6d876;
+    left: 25%;
+}
+
+.shape-6 {
+    width: 80px;
+    height: 80px;
+    bottom: 40%;
+    right: 20%;
+    background-color: #84f6d876;
+}
+
+.shape-7 {
+    width: 150px;
+    height: 150px;
+    bottom: 20px;
+    right: 10px;
+    background-color: #84f6d876;
+}
+
+.shape-8 {
+    width: 100px;
+    height: 100px;
+    bottom: 75px;
+    left: 75px;
+    background-color: #84f6d876;
+}
+
+.shape-9 {
+    width: 100px;
+    height: 100px;
+    top: 35px;
+    right: 254px;
+    background-color: #84f6d876;
+}
+
+/* Animação de flutuação */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(30px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Container de login */
+.login-container {
+    position: relative;
+    background-color: #ffffff30;
+    padding: 60px 40px;
+    border-radius: 50px;
+    color: #1a501f;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    transition: all 0.6s ease;
+    overflow: hidden;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Fundo escurecido */
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    animation: fadeIn 0.5s ease forwards; /* Animação de entrada */
+    z-index: 1000; /* Certifique-se de que o modal apareça acima de outros elementos */
+}
+
+
+
+.VOLTAR {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 25px;
+    color: #22472c;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.VOLTAR:hover {
+    transform:translateX(-5px);
+}
+
+.choice-modal {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+    transform: translateY(-60px); /* Leve movimento inicial */
+    animation: zoomIn 0.6s ease forwards; /* Animação de entrada */
+    
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Animação de entrada suave com zoom */
+@keyframes zoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8); /* Levemente reduzido */
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.05); /* Leve aumento para efeito de "pop" */
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1); /* Tamanho final */
+    }
+}
+
+.choice-modal img {
+    margin-top: -80px;
+    width: 250px;
+    margin-bottom: -80px;
+}
+
+.choice-modal h3 {
+    margin-bottom: 20px;
+    color: #22472c;
+}
+
+.choice-button {
+    display: inline-block;
+    padding: 10px 20px;
+    width: 80%;
+    margin: 5px;
+    background-color: #1e824c;
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.choice-button:hover {
+    background-color: #166238;
+    transform: translateY(-3px); /* Efeito de movimento ao passar o mouse */
+}
+
+.login-container img {
+    width: 250px;
+    height: auto;
+    margin-left: 60px;
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Input com ícone */
+.input-icon {
+    display: flex;
+    align-items: center;
+}
+
+.input-icon i {
+    margin-right: 10px;
+    color: #555;
+}
+
+.input-icon input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding-left: 5px;
+    border-radius: 30px;
+}
+
+.btn-voltar {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 10px;
+    color: #22472c;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.btn-voltar:hover {
+    transform:translateX(-5px);
+}
+
+.btn-voltar i {
+    font-size: 25px;
+}
+
+.btn-recuperar {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #22472c;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-recuperar:hover {
+    text-decoration: underline;
+}
+
+/* Botão de login com Google */
+.btn-google-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a501f;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-google-login i {
+    margin-right: 10px;
+}
+
+.btn-google-login:hover {
+    background-color: #1e824c;
+}
+
+/* Input */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px;
+    border: 1px solid #1a501f;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Placeholder */
+.form-group input::placeholder {
+    color: #999;
+    font-size: 0.95rem;
+}
+
+/* Toggle senha */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #555;
+    z-index: 2;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+
+
+
+.alert-container {
+    margin: 10px 0;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error, .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-info {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* Botões */
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-logar1 {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #22472c;
+    color: white;
+    width: 100%;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-logar1:hover {
+    background-color: #1e824c;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+
+.registrar1{
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #22472c;
+    color: white;
+    text-decoration: none;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.registrar1:hover{
+    background-color: #1e824c;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    .login-container {
+        max-width: 90%;
+        padding: 40px 20px;
+        background: white;
+        box-shadow: none;
+        border-radius: 20px;
+    }
+
+    .buttons {
+        flex-direction:row;
+    }
+
+    .buttons button {
+        width: 50%;
+    }
+
+    .buttons a {
+        width: 45%;
+    }
+
+    .background-shape {
+        display: none; /* Ocultar formas no mobile */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .login-container {
+        max-width: 95%;
+        padding: 30px 15px;
+    }
+
+    body {
+        background: radial-gradient(circle at 50% 50%, #1e5425, #84f6d8, #1e824c);
+        background-size: 150% 150%;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Fixa o fundo para um efeito de movimento */
+    }
+
+
+    .form-group input {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    .btn-logar1, .registrar1 {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .login-container h2 {
+        font-size: 1rem;
+    }
+}

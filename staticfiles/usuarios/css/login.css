@@ -1,0 +1,397 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.background-shape {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #22472cea;
+    animation: float 8s ease-in-out infinite;
+}
+
+/* Tamanhos e posições das formas */
+.shape-1 {
+    width: 250px;
+    height: 250px;
+    top: -50px;
+    left: -50px;
+}
+
+.shape-11{
+    width: 180px;
+    height: 180px;
+    top:  -15px;
+    left: -15px;
+    background-color:  #84f6d876;
+}
+
+.shape-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    right: -100px;
+
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    bottom: 50px;
+    left: 50px;
+
+}
+
+.shape-4 {
+    width: 150px;
+    height: 150px;
+    top: 10px;
+    right: 15%;
+}
+
+.shape-5 {
+    width: 80px;
+    height: 80px;
+    top: 40%;
+    background-color:  #84f6d876;
+    left: 25%;
+}
+
+.shape-6 {
+    width: 80px;
+    height: 80px;
+    bottom: 40%;
+    right: 20%;
+    background-color:  #84f6d876;
+
+}
+
+.shape-7{
+    width: 150px;
+    height: 150px;
+    bottom: 20px;
+    right: 10px;
+    background-color:  #84f6d876;
+
+}
+
+.shape-8{
+    width: 100px;
+    height: 100px;
+    bottom: 75px;
+    left: 75px;
+    background-color:  #84f6d876;
+}
+
+.shape-9 {
+    width: 100px;
+    height: 100px;
+    top: 35px;
+    right: 254px;
+    background-color:  #84f6d876;
+
+}
+
+/* Animação de flutuação */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(30px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+
+
+
+/* Container de login */
+.login-container {
+    position: relative;
+    background-color:  #ffffff30;
+    padding: 60px 40px;
+    border-radius: 50px;
+    color: #1a501f;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    max-width: 400px;
+    width: 100%;
+    transition: all 0.6s ease;
+    overflow: hidden; 
+}
+
+/* Efeito de borda expansiva */
+.login-container::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background:  #a1ffeb1d;; /* Cor da borda expansiva */
+    transform: translate(-50%, -50%);
+    border-radius: 70px;
+    transition: width 0.8s ease, height 0.8s ease; /* Transição suave de expansão */
+    z-index: -1; /* Mantém a animação atrás do conteúdo */
+}
+
+/* Efeito ao passar o mouse */
+.login-container:hover::before {
+    width: 500px; /* Expansão horizontal */
+    height: 500px; /* Expansão vertical */
+}
+
+form {
+    z-index: 1; 
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}   
+
+
+.login-container img{
+    width: 250px;
+    height: auto;
+
+    margin-left: 60px;
+ 
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+   
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.btn-voltar {
+    position: absolute;
+    margin-top: -1px;
+    top: 20px; /* Ajuste conforme necessário */
+    left: 30px; /* Ajuste conforme necessário */
+    font-size: 18px;
+    color: #22472c; /* Cor da seta e texto */
+    text-decoration: none;
+    font-weight: bold;
+    background-color: white;
+    transition: transform 0.4s ease;
+}
+
+.btn-voltar:hover {
+    transform: scale(1.5); 
+}
+
+.btn-voltar i {
+    font-size: 25px;
+    
+}
+
+
+/* Formulário */
+form {
+    z-index: 1; 
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}   
+
+/* Campo de entrada */
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Espaço extra para o ícone de olho */
+    border: 1px solid #1a501f;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Ícone de olho dentro do campo de senha */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #555;
+    z-index: 2;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+
+/* Placeholder */
+.form-group input::placeholder {
+    color: #999; /* Cor do texto placeholder */
+    font-size: 0.95rem; /* Tamanho da fonte do placeholder */
+}
+
+.btn-logarEntrar i {
+    font-size: 18px;
+    margin-left: 8px;
+}
+
+
+.btn-recuperar {
+    color: #22472c;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-recuperar:hover {
+    text-decoration: underline;
+}
+
+
+
+.form-group input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #1a501f;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group input::placeholder {
+    color: #999; /* Cor do texto placeholder */
+    font-size: 0.95rem; /* Tamanho da fonte do placeholder */
+}
+
+
+
+.buttons {
+    display: flex;
+    justify-content: space-between; /* Alinha os botões um ao lado do outro */
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+.buttons button, .buttons a {
+    flex: 1; /* Garante que ambos os botões tenham o mesmo tamanho */
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+
+
+/* Estilo base do botão */
+.btn-logar1 {
+    display: inline-block;
+    padding: 12px 30px;
+    margin: 10px;
+    background-color: #22472c; /* Cor de fundo verde escuro */
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem; /* Tamanho da fonte um pouco maior */
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px; /* Bordas bem arredondadas */
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: all 0.4s ease; /* Transição suave */
+}
+
+/* Efeito ao passar o mouse */
+.btn-logar1:hover {
+    background-color: #1e824c; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); 
+    transform: translateY(-3px); 
+    color: white;
+}
+
+/* Efeito de clique */
+.btn-logar1:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+}
+
+.registrar1 {
+    display: inline-block;
+    padding: 12px 30px;
+    margin: 10px;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #22472c; /* Cor de fundo verde escuro */
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem; /* Tamanho da fonte um pouco maior */
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px; /* Bordas bem arredondadas */
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: all 0.4s ease; /* Transição suave */
+
+}
+
+.registrar1:hover {
+    background-color: #1e824c; /* Alterar para um verde um pouco mais claro */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada no hover */
+    transform: translateY(-3px); /* Eleva o botão levemente */
+    color: white;
+}
+
+.registrar1:active{
+    transform: translateY(1px); /* Dá a sensação de clique */
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 768px) {
+    .login-container {
+        max-width: 90%; /* Reduz a largura no mobile */
+    }
+
+    .buttons {
+        flex-direction: column; /* Empilha os botões no mobile */
+    }
+
+    .buttons button, .buttons a {
+        width: 100%; /* Garante que os botões ocupem toda a largura no mobile */
+    }
+}

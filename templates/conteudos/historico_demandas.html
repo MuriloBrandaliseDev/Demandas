@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    {% load static %}
+
+    <!-- ======================================================
+                     Importação de Fontes e Reset de Estilos
+  ====================================================== -->
+    <style>
+      /* Importa a fonte Poppins do Google Fonts */
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+      /* Reset de estilos básicos e aplicação da fonte */
+      * {
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Estilo básico do body */
+      body {
+        background-color: #f7f7f1;
+        height: 100vh;
+      }
+
+      /* ======================================================
+                         Estilos do Container Principal
+    ====================================================== */
+      .historico-container {
+        margin: 0 auto;
+        width: 95%;
+        margin: 3%;
+        max-width: 1300px;
+        padding: 20px;
+        margin-left: 190px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: solid 1px #ddd;
+      }
+
+      .historico-container h2 {
+        font-size: 27px;
+        margin-bottom: 80px;
+        text-align: center;
+      }
+
+      /* ======================================================
+                      Estilos da Lista de Demandas
+    ====================================================== */
+      .demandas-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .demanda-row {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #176817;
+        background: #f9f9f9;
+        gap: 10px;
+        transition: all 0.2s;
+      }
+
+      .demanda-row:hover {
+        background: #e6e6e6;
+        transform: translateX(3px);
+      }
+
+      .demanda-titulo {
+        font-size: 18px;
+        font-weight: bold;
+        flex: 1;
+        text-align: center;
+      }
+
+      .demanda-detalhes {
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+        text-align: start;
+        margin-left: 100px;
+      }
+
+      .demanda-detalhes i {
+        margin-right: 5px;
+      }
+
+      .demanda-detalhes p {
+        margin: 3px 0;
+        font-size: 14px;
+        color: #212121;
+      }
+
+      /* ======================================================
+                        Estilos dos Botões
+    ====================================================== */
+      .deletar {
+        background-color: transparent;
+        color: rgb(34, 34, 34);
+        border: none;
+        padding: 1px 5px;
+        font-size: 15px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.1s;
+      }
+
+      .deletar:hover {
+        color: #f10d0d;
+      }
+
+      .ver-mais {
+        background-color: #1d7926;
+        color: white;
+        border: none;
+        padding: 1px 5px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+
+      .ver-mais:hover {
+        background-color: #125d1a;
+      }
+
+      /* ======================================================
+                             Estilos dos Modais
+    ====================================================== */
+
+      /* Modal Genérico */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+      }
+
+      .modal-content h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .modal-content p {
+        margin: 5px 0;
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #212121;
+        border-bottom: 1px solid #d2d2d2;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 25px;
+        cursor: pointer;
+        color: #3c3c3c;
+      }
+
+      .close-modal:hover {
+        color: #000;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+
+      /* Modal de Confirmação de Exclusão em Massa */
+      .modall {
+        display: none;
+        position: fixed;
+        z-index: 1001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modall-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        height: 200px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .modall-content h1 {
+        font-size: 25px;
+        margin-bottom: 10px;
+      }
+
+      .modall-content p {
+        font-size: 19px;
+        margin-bottom: 10px;
+      }
+
+      .modal-buttonc,
+      .modal-buttone {
+        padding: 10px 20px;
+        margin: 10px 5px 0 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .modal-buttone {
+        background-color: #232323;
+        color: white;
+        transition: all 0.1s;
+      }
+
+      .modal-buttone:hover {
+        background-color: #c90a0a;
+        transform: translateY(-3px);
+      }
+
+      .modal-buttonc {
+        background-color: #1d7926;
+        color: white;
+        transition: all 0.1s;
+      }
+
+      .modal-buttonc:hover {
+        background-color: #125d1a;
+        transform: translateY(-3px);
+      }
+
+      /* Modal de Exclusão Selecionados */
+      .excluir-selecionados {
+        position: absolute;
+        top: 25%;
+        right: 65px;
+        background-color: #232323;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.1s;
+      }
+
+      .excluir-selecionados:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .excluir-selecionados:hover:not(:disabled) {
+        background-color: #c90a0a;
+      }
+
+      /* Modal de Confirmação de Exclusão Individual */
+      .modalll {
+        display: none;
+        position: fixed;
+        z-index: 1001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modalll-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 320px;
+        height: 200px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .modalll-content h1 {
+        font-size: 25px;
+        margin-bottom: 10px;
+      }
+
+      .modalll-content p {
+        font-size: 19px;
+        margin-bottom: 10px;
+      }
+
+      .modal-buttonM,
+      .modal-buttonL {
+        padding: 10px 25px;
+        margin: 10px 5px 0 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .modal-buttonL {
+        background-color: #232323;
+        color: white;
+        transition: all 0.1s;
+      }
+
+      .modal-buttonL:hover {
+        background-color: #c90a0a;
+        transform: translateY(-3px);
+      }
+
+      .modal-buttonM {
+        background-color: #1d7926;
+        color: white;
+        transition: all 0.1s;
+      }
+
+      .modal-buttonM:hover {
+        background-color: #125d1a;
+        transform: translateY(-3px);
+      }
+
+      /* Animação de fade-out */
+      .fade-out {
+        animation: fadeOut 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          height: 100%;
+          margin: 10px 0;
+        }
+        to {
+          opacity: 0;
+          height: 0;
+          margin: 0;
+        }
+      }
+
+      /* Mensagem quando não há demandas */
+      .no-demandas {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-top: 20px; /* Adicione uma margem superior para espaçamento */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ======================================================
+                      Container Histórico de Demandas
+  ====================================================== -->
+    <div class="historico-container">
+      <h2>
+        Histórico de <span style="color: rgb(0, 194, 107)">Demandas</span>
+      </h2>
+
+      <!-- Botão para excluir demandas selecionadas -->
+      <button id="excluirSelecionados" class="excluir-selecionados" disabled>
+        Excluir Selecionados
+      </button>
+
+      <!-- Checkbox para selecionar todas as demandas -->
+      <div>
+        <input type="checkbox" id="selecionarTodos" />
+        <label for="selecionarTodos">Selecionar Todos</label>
+      </div>
+
+      <!-- Lista de Demandas -->
+      <div class="demandas-list">
+        {% for demanda in demandas_concluidas %}
+        <div class="demanda-row" id="demanda-{{ demanda.id }}">
+          <!-- Checkbox individual para cada demanda -->
+          <input
+            type="checkbox"
+            class="demanda-checkbox"
+            data-id="{{ demanda.id }}"
+          />
+
+          <!-- Título da demanda -->
+          <div class="demanda-titulo">{{ demanda.titulo_projeto }}</div>
+
+          <!-- Detalhes da demanda -->
+          <div class="demanda-detalhes">
+            <p>
+              <strong><i class="fa-solid fa-spinner"></i></strong> {{ demanda.get_status_display }}
+            </p>
+            <p>
+              <strong><i class="fa-solid fa-calendar-days"></i></strong> {{ demanda.data_criacao|date:"d/m/Y H:i" }}
+            </p>
+          </div>
+
+          <!-- Botão para ver mais detalhes -->
+          <button class="ver-mais" data-id="{{ demanda.id }}">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+
+          <!-- Botão para deletar a demanda -->
+          <button class="deletar" data-id="{{ demanda.id }}">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+        {% endfor %}      
+    </div>
+
+    <!-- ======================================================
+                      Modal de Detalhes da Demanda
+  ====================================================== -->
+    <div id="detalhesModal" class="modal hidden">
+      <div class="modal-content">
+        <!-- Botão para fechar o modal -->
+        <span class="close-modal">&times;</span>
+
+        <h3>
+          Detalhes da <span style="color: rgb(0, 194, 107)">Demanda</span>
+          <i
+            style="margin-left: 15px; font-size: 17px"
+            class="fa-solid fa-circle-info"
+          ></i>
+        </h3>
+
+        <!-- Informações detalhadas da demanda -->
+        <p id="detalhes-titulo"></p>
+        <p id="detalhes-status"></p>
+        <p id="detalhes-urgencia"></p>
+        <p id="detalhes-data"></p>
+        <p id="detalhes-descricao"></p>
+      </div>
+    </div>
+
+    <!-- ======================================================
+               Modal de Confirmação para Exclusão em Massa
+  ====================================================== -->
+    <div id="confirmacaoMassaModal" class="modalll hidden">
+      <div class="modalll-content">
+        <h1>Quero<span style="color: rgb(0, 194, 107)">lar</span></h1>
+        <p>Tem certeza que deseja excluir?</p>
+        <!-- Botão para confirmar exclusão em massa -->
+        <button id="confirmarExclusaoMassa" class="modal-buttonL">
+          Sim, excluir
+        </button>
+        <!-- Botão para cancelar exclusão em massa -->
+        <button id="cancelarExclusaoMassa" class="modal-buttonM">
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================
+               Modal de Confirmação para Exclusão Individual
+  ====================================================== -->
+    <div id="confirmacaoModal" class="modall hidden">
+      <div class="modall-content">
+        <h1>Quero<span style="color: rgb(0, 194, 107)">lar</span></h1>
+        <p>Tem certeza que deseja excluir esta demanda?</p>
+        <!-- Botão para confirmar exclusão individual -->
+        <button id="confirmarExclusao" class="modal-buttone">
+          Sim, excluir
+        </button>
+        <!-- Botão para cancelar exclusão individual -->
+        <button id="cancelarExclusao" class="modal-buttonc">Cancelar</button>
+      </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <!-- ======================================================
+                             Scripts
+  ====================================================== -->
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

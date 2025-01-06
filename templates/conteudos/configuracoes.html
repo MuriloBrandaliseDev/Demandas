@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <!-- Metadados básicos -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demandas Cadastradas</title>
+
+    <!-- Carrega arquivos estáticos do Django -->
+    {% load static %}
+
+    <!-- Importação de fontes e ícones externos -->
+    <style>
+      /* Importa a fonte Poppins do Google Fonts */
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+      /* ======================================================
+           Estilos Globais
+      ====================================================== */
+      * {
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        margin: 0 auto;
+        background-color: #f7f7f1;
+        min-height: 100vh;
+      }
+
+      /* ======================================================
+           Estilos da Lista de Demandas
+      ====================================================== */
+      #lista-demandas {
+        margin: 0 auto;
+        padding: 20px;
+        width: 87%;
+        margin-top: 3%;
+        margin-left: 190px;
+        /* Ajuste conforme a largura do sidebar */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: solid 1px #ddd;
+        background-color: white;
+      }
+
+      #lista-demandas h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 50px;
+      }
+
+      /* ======================================================
+           Estilos dos Cartões de Demanda
+      ====================================================== */
+      .demanda-summary {
+        border: solid 1px #176817;
+        background-color: #f6f6f6;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .demanda-summary:hover {
+        background-color: #dcdcdc;
+        transform: translateX(3px);
+      }
+
+      .demanda-summary h3 {
+        font-size: 18px;
+        color: #232323;
+        margin: 0;
+        flex: 1;
+        /* Faz o título ocupar o máximo de espaço */
+        text-align: center;
+        /* Alinha o título ao centro */
+      }
+
+      .start {
+        display: flex;
+        justify-content: center;
+        flex: 2;
+        margin-left: 115px;
+        flex-direction: column;
+        font-size: 13px;
+        text-align: left;
+        gap: 5px;
+      }
+
+      .start i {
+        margin-right: 5px;
+        font-size: 15px;
+      }
+
+      .iconee {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 0;
+        /* Garante que ocupe apenas o espaço necessário */
+      }
+
+      .demanda-summary .toggle-icon {
+        font-size: 16px;
+        margin-left: 10px;
+        /* Margem à esquerda para espaçamento */
+        background-color: #0b8a06;
+        padding: 5px 5px;
+        color: #ffffff;
+        cursor: pointer;
+      }
+
+      /* Detalhes da Demanda */
+      .demanda-details {
+        border: solid 1px #ddd;
+        padding: 5px 10px;
+        max-height: 0;
+        /* Altura inicial para esconder o conteúdo */
+        overflow: hidden;
+        /* Esconde o conteúdo que excede a altura */
+        transition: max-height 0.7s ease-in-out, opacity 0.7s ease-in-out;
+        opacity: 0;
+        /* Transparência inicial */
+      }
+
+      .demanda-details.open {
+        max-height: 500px;
+        /* Altura suficiente para o conteúdo */
+        opacity: 1;
+        /* Torna visível */
+        transition: max-height 0.6s ease-out, opacity 0.3s ease-out;
+        /* Suaviza abertura */
+      }
+
+      .demanda-details p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .demanda-details a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .demanda-details a:hover {
+        text-decoration: underline;
+      }
+
+      /* Ícone de toggle ao abrir detalhes */
+      .demanda-summary.open .toggle-icon {
+        transform: rotate(180deg);
+      }
+
+      /* Botões de Ação na Demanda */
+      .demanda-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .demanda-actions i {
+        margin-left: 5px;
+      }
+
+      /* Botões estilizados */
+      .concluido-button,
+      .delete-button,
+      .edit-button {
+        padding: 5px 10px;
+        cursor: pointer;
+        border: none;
+        font-size: 12px;
+        color: white;
+        margin-bottom: 10px;
+        transition: all 0.1s ease;
+        border-radius: 2px;
+      }
+
+      .concluido-button {
+        background-color: #1d7926;
+        /* Verde */
+      }
+
+      .concluido-button:hover {
+        background-color: #175a17;
+      }
+
+      .delete-button {
+        background-color: rgb(34, 34, 34);
+        /* Vermelho */
+      }
+
+      .delete-button:hover {
+        background-color: rgb(207, 9, 9);
+      }
+
+      .edit-button {
+        background-color: #007bff;
+        /* Azul */
+      }
+
+      .edit-button:hover {
+        background-color: #0056b3;
+      }
+
+       /* Mensagem quando não há demandas */
+       .no-demandas {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-top: 20px; /* Adicione uma margem superior para espaçamento */
+      }
+      /* ======================================================
+           Estilos das Notificações
+      ====================================================== */
+      #notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 300px;
+        max-width: 500px;
+        padding: 15px 25px;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 16px;
+        text-align: center;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.5s ease, top 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #notification.success {
+        background-color: #1d7926;
+        /* Verde */
+      }
+
+      #notification.error {
+        background-color: #f44336;
+        /* Vermelho */
+      }
+
+      #notification.show {
+        opacity: 1;
+        top: 20px;
+      }
+
+      #notification.error::before {
+        content: "❌";
+        /* Ícone de erro */
+        margin-right: 10px;
+      }
+
+      /* ======================================================
+           Estilos do Modal de Confirmação
+      ====================================================== */
+      .modal {
+        display: none;
+        /* Oculto por padrão */
+        position: fixed;
+        /* Fixa na tela */
+        z-index: 1001;
+        /* Acima da notificação */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Largura total */
+        height: 100%;
+        /* Altura total */
+        overflow: auto;
+        /* Permite rolagem se necessário */
+        background-color: rgba(0, 0, 0, 0.6);
+        /* Fundo semitransparente mais escuro */
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      .fade-out {
+        animation: fadeOut 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          height: 100%;
+          margin: 10px 0;
+        }
+        to {
+          opacity: 0;
+          height: 0;
+          margin: 0;
+        }
+      }
+
+      .modal-content {
+        background-color: #ffffff;
+        padding: 30px 25px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        width: 1000px;
+        /* Largura do modal */
+        border-radius: 12px;
+        text-align: center;
+        position: relative;
+        /* Para posicionar o botão de fechar */
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-content h2 {
+        font-size: 25px;
+        margin-bottom: 30px;
+        color: #333;
+      }
+
+      /* Botões no Modal de Confirmação */
+      .btn-confirm,
+      .btn-cancel {
+        padding: 15px 25px;
+        margin: 10px 10px 0 10px;
+        border: none;
+        width: 150px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.1s ease, transform 0.1s ease;
+      }
+
+      .btn-confirm {
+        background-color: #1c1c1c;
+        /* Vermelho para confirmação */
+        color: white;
+      }
+
+      .btn-cancel {
+        background-color: #1d7926;
+        /* Verde para cancelamento */
+        color: white;
+      }
+
+      .btn-confirm:hover {
+        background-color: #da190b;
+        transform: translateY(-2px);
+      }
+
+      .btn-cancel:hover {
+        background-color: #0b8a06;
+        transform: translateY(-2px);
+      }
+
+      /* Estilos para inputs dentro do modal */
+      .modal-content form input[type="text"],
+      .modal-content form input[type="email"],
+      .modal-content form input[type="password"],
+      .modal-content form textarea,
+      .modal-content form select,
+      .modal-content form input[type="file"] {
+        width: 100%;
+        padding: 10px 12px;
+        margin: 8px 0 16px 0;
+        border: 1px solid #024301;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, all 0.2s ease;
+      }
+
+      .modal-content form input[type="text"]:hover,
+      .modal-content form input[type="email"]:hover,
+      .modal-content form input[type="password"]:hover,
+      .modal-content form textarea:hover,
+      .modal-content form select:hover,
+      .modal-content form input[type="file"]:hover {
+        transform: translateX(4px);
+      }
+
+      .modal-content form input[type="text"]:focus,
+      .modal-content form input[type="email"]:focus,
+      .modal-content form input[type="password"]:focus,
+      .modal-content form textarea:focus,
+      .modal-content form select:focus,
+      .modal-content form input[type="file"]:focus {
+        border-color: #1d7926;
+        box-shadow: 0 0 5px rgba(29, 121, 38, 0.5);
+        outline: none;
+      }
+
+      .modal-content form textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .modal-content form label {
+        display: block;
+        text-align: left;
+        margin-bottom: -5px;
+        font-weight: 500;
+        color: #1a1a1a;
+      }
+
+      .modal-content form i {
+        margin-left: 5px;
+      }
+
+      #edit-feedback {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      #edit-feedback.error {
+        color: #f44336;
+        /* Vermelho */
+      }
+
+      #edit-feedback.success {
+        color: #1d7926;
+        /* Verde */
+      }
+
+      /* ======================================================
+           Estilos do Modal de Sucesso (Opcional)
+      ====================================================== */
+      #success-message.modal-content {
+        padding: 20px;
+        text-align: center;
+      }
+
+      #success-message .close-button {
+        display: block;
+        /* Mostra o botão de fechar no modal de sucesso */
+        position: absolute;
+        top: 10px;
+        right: 15px;
+      }
+
+      .show {
+        display: block;
+        /* Exibe o modal */
+      }
+
+      .hidden {
+        display: none;
+        /* Mantém o modal oculto */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ======================================================
+        Contêiner da Lista de Demandas
+    ====================================================== -->
+    <!-- Contêiner da Lista de Demandas -->
+    <div id="lista-demandas">
+      <h1>Demandas <span style="color: rgb(0, 194, 107)">Cadastradas</span></h1>
+
+      <!-- Verifica se existem demandas cadastradas -->
+      {% if demandas %}
+        <!-- Itera sobre cada demanda -->
+        {% for demanda in demandas %}
+          <div class="demanda-card" id="demanda-{{ demanda.id }}">
+            <div class="demanda-summary">
+              <!-- Título -->
+              <h3 class="demanda-titulo">{{ demanda.titulo_projeto }}</h3>
+
+              <!-- Parte Central: Status e Data -->
+              <div class="start">
+                <p class="demanda-status">
+                  <strong><i class="fa-solid fa-spinner"></i></strong> {{ demanda.get_status_display }}
+                </p>
+                <p class="demanda-data">
+                  <strong><i class="fa-solid fa-calendar-days"></i></strong> {{ demanda.data_criacao|date:"d/m/Y H:i" }}
+                </p>
+              </div>
+
+              <!-- Ícone de Expandir -->
+              <div class="iconee">
+                <i class="fa-solid fa-plus toggle-icon"></i>
+              </div>
+            </div>
+
+            <!-- Detalhes da Demanda: Inicialmente ocultos -->
+            <div class="demanda-details">
+              <p class="demanda-solicitante">
+                <strong>Solicitante:</strong> {{ demanda.nome_solicitante }}
+              </p>
+              <p class="demanda-categoria"><strong>Categoria:</strong> {{ demanda.categoria }}</p>
+              <p class="demanda-descricao"><strong>Descrição:</strong> {{ demanda.descricao }}</p>
+              <p class="demanda-status-detail"><strong>Status:</strong> {{ demanda.get_status_display }}</p>
+              <p class="demanda-urgencia"><strong>Urgência:</strong> {{ demanda.get_urgencia_display }}</p>
+              <p class="demanda-taxa_urgencia"><strong>Taxa de Urgência:</strong> {{ demanda.taxa_urgencia|yesno:"Sim,Não" }}</p>
+              <p class="demanda-criacao"><strong>Criado em:</strong> {{ demanda.data_criacao|date:"d/m/Y H:i" }}</p>
+
+              <!-- Verifica se há arquivo adicional -->
+              {% if demanda.arquivo_adicional %}
+                <p class="demanda-arquivo">
+                  <strong>Arquivo:</strong>
+                  <a href="{{ demanda.arquivo_adicional.url }}" target="_blank">Baixar Arquivo</a>
+                </p>
+              {% else %}
+                <p class="demanda-arquivo">
+                  <strong>Arquivo:</strong> Nenhum arquivo enviado
+                </p>
+              {% endif %}
+
+              <!-- Botões de Ação: Concluir, Excluir e Editar -->
+              <div class="demanda-actions">
+                <button class="concluido-button" data-id="{{ demanda.id }}">
+                  Concluir <i class="fa-solid fa-check-double"></i>
+                </button>
+                <button class="delete-button deletar" data-id="{{ demanda.id }}">
+                  Excluir <i class="fa-solid fa-trash"></i>
+                </button>
+                <button class="edit-button" data-id="{{ demanda.id }}">
+                  Editar <i class="fa-solid fa-edit"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Mensagem sempre presente, mas visível somente se não houver demandas -->
+      <p id="no-demanda-message" class="no-demandas" style="display: {% if not demandas %}block{% else %}none{% endif %};">
+        Nenhuma demanda cadastrada ainda. Clique em "Cadastrar" para adicionar
+        uma nova demanda.
+      </p>
+    </div>
+
+    <!-- ======================================================
+        Contêiner de Notificação
+    ====================================================== -->
+    <div id="notification" class="notification"></div>
+
+    <!-- ======================================================
+        Modal de Confirmação para Exclusão
+    ====================================================== -->
+    <div id="confirmation-modal" class="modal">
+      <div style="width: 320px" class="modal-content">
+        <h1 style="font-size: 25px; margin-bottom: 5px">
+          Quero<span style="color: rgb(0, 194, 107)">lar</span>
+        </h1>
+        <!-- Botão de fechar modal -->
+        <span class="close-button"></span>
+        <p style="margin-bottom: 10px">
+          Tem certeza que deseja excluir esta demanda?
+        </p>
+        <!-- Botões de confirmação e cancelamento -->
+        <button
+          id="confirm-excluir"
+          class="btn-confirm"
+          style="padding: 10px 12px; width: 110px"
+        >
+          Sim, excluir
+        </button>
+        <button
+          id="cancel-excluir"
+          class="btn-cancel"
+          style="padding: 10px 12px; width: 110px"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================
+        Modal de Sucesso (Opcional)
+    ====================================================== -->
+    <div id="success-message" class="modal hidden">
+      <div class="modal-content">
+        <!-- Botão de fechar modal -->
+        <span class="close-button">&times;</span>
+        <p>
+          <i style="color: white" class="fa-solid fa-check"></i> Operação
+          realizada com sucesso!
+        </p>
+      </div>
+    </div>
+
+    <!-- ======================================================
+        Modal de Edição
+    ====================================================== -->
+    <div id="edit-modal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button"></span>
+        <h2>Editar <span style="color: rgb(0, 194, 107)">Demanda</span></h2>
+
+        <form id="editForm" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" id="edit-demanda-id" name="demanda_id" />
+
+          <div>
+            <label for="edit-titulo_projeto"
+              >Projeto <i class="fa-solid fa-diagram-project"></i
+            ></label>
+            <input
+              type="text"
+              id="edit-titulo_projeto"
+              name="titulo_projeto"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="edit-nome_solicitante"
+              >Nome do Solicitante <i class="fa-solid fa-user"></i
+            ></label>
+            <input
+              type="text"
+              id="edit-nome_solicitante"
+              name="nome_solicitante"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="edit-categoria"
+              >Categoria <i class="fa-solid fa-layer-group"></i
+            ></label>
+            <input type="text" id="edit-categoria" name="categoria" required />
+          </div>
+
+          <div>
+            <label for="edit-descricao"
+              >Descrição <i class="fa-solid fa-note-sticky"></i
+            ></label>
+            <textarea id="edit-descricao" name="descricao" required></textarea>
+          </div>
+
+          <div>
+            <label for="edit-status"
+              >Status <i class="fa-regular fa-circle-check"></i
+            ></label>
+            <select id="edit-status" name="status" required>
+              <option value="novo">Novo</option>
+              <option value="em_andamento">Em Andamento</option>
+              <option value="concluido">Concluído</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="edit-urgencia"
+              >Urgência <i class="fa-solid fa-biohazard"></i
+            ></label>
+            <select id="edit-urgencia" name="urgencia" required>
+              <option value="baixa">Baixa</option>
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="edit-arquivo_adicional"
+              >Adicionar Arquivos <i class="fa-solid fa-paperclip"></i
+            ></label>
+            <input
+              type="file"
+              id="edit-arquivo_adicional"
+              name="arquivo_adicional"
+              multiple
+            />
+          </div>
+
+          <div>
+            <button type="submit" class="btn-confirm">Salvar</button>
+            <button type="button" class="btn-cancel">Cancelar</button>
+          </div>
+
+          <div id="edit-feedback"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================
+        Inclusão do Arquivo JavaScript Externo
+    ====================================================== -->
+    <!-- Removido script.js para evitar conflitos, mantendo apenas demandas.js -->
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

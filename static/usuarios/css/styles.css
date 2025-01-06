@@ -1,0 +1,581 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Reset de estilo */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1000;
+    padding: 1% 10%;
+}
+
+.social-media {
+    display: flex;
+    gap: 30px;
+    
+
+}
+
+.social-media a {
+    color: #22472c;
+    font-size: 1.3rem;
+    transition: color 0.3s;
+}
+
+.social-media a:hover {
+    color: #1b3e24;
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 200px;
+    height: auto;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 5px;
+    /* Adiciona espaço entre os itens */
+}
+
+.nav-links li {
+    margin: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0.5rem 1.8rem;
+    font-size: 13px;
+    position: relative;
+    /* Necessário para o pseudo-elemento ::after */
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    /* Altura da linha */
+    background-color: #22472c;
+    /* Cor da linha */
+    transition: width 0.3s ease;
+    /* Transição suave para o efeito de expansão */
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-links .active a::after {
+    width: 100%;
+}
+
+.colorA {
+    color: #22472c;
+}
+
+/* Estilizando o item de login */
+.login-item {
+    display: inline-block;
+    position: relative;
+    margin-left: 20px;
+}
+
+/* Botão de login */
+.btn-login {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 1.5rem;
+}
+
+/* Ícone inicial de login */
+.default-icon {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    color: #555;
+}
+
+/* Ícone do boneco correndo, escondido inicialmente */
+.hidden-icon {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    color: #0066cc;
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Tooltip oculto inicialmente */
+.tooltip {
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: -70px;
+    transform: translateY(-50%);
+    background-color: #2f4f4f;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+/* Exibir tooltip ao passar o mouse */
+.btn-login:hover .tooltip {
+    display: block;
+}
+
+/* Trocar o ícone ao passar o mouse */
+.btn-login:hover .default-icon {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(20px);
+    /* Mover o ícone de login para fora */
+}
+
+.btn-login:hover .hidden-icon {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    /* Traz o ícone de pessoa correndo */
+}
+
+/* Seção Hero */
+#hero {
+    position: relative;
+    background-color: #ffffff; /* Cor de fundo */
+    padding: 50px;
+    height: 89vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    overflow: hidden;
+
+}
+
+.hero-content {
+    max-width: 50%;
+    z-index: 2;
+}
+
+.hero-content h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.hero-content p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.botão {
+    background-color: #22472c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    width: 25%;
+    padding: 10px;
+    font-size: 0.9rem;
+    transition: background-color 0.6s ease;
+    border: solid 2px #1b3e24;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.botão:hover {
+    background-color: transparent;
+    border: solid 2px #1b3e24;
+    color: #1b3e24;
+}
+
+/* Imagem do herói */
+.hero-image {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.2);
+    border-radius: 4%;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -250px;
+    width: 800px;
+    height: 800px;
+    background-color: #22472c;
+    transform: rotate(45deg);
+    box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 1600;
+}
+
+
+
+
+.imagem img {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Seção Sobre e Serviços */
+#sobre,
+#servicos {
+    padding: 50px 20px;
+    background-color: #fff;
+    margin: 20px 0;
+    text-align: center;
+}
+
+#sobre h3,
+#servicos h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+#sobre p,
+#servicos p {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Rodapé */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Cor preta com 50% de opacidade */
+    z-index: 1000;
+    opacity: 0; /* Inicialmente invisível */
+    visibility: hidden; /* Para que não interfira nos cliques */
+    transition: opacity 0.3s ease;
+}
+
+/* Quando o overlay estiver ativo (menu aberto) */
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+.modal {
+    display: none; /* Oculta o modal por padrão */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilita rolagem se necessário */
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.4
+    ); /* Fundo escuro semi-transparente */
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% do topo e centralizado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+  }
+
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+  }
+
+  .close-button:hover,
+  .close-button:focus {
+    color: black;
+    text-decoration: none;
+  }
+
+  .show {
+    display: block; /* Exibe o modal */
+  }
+
+  .hidden {
+    display: none; /* Mantém o modal oculto */
+  }
+
+
+/* Responsivo para mobile */
+@media screen and (max-width: 768px) {
+
+    body {
+        background: url('../imagens/imagem4.png') no-repeat center center fixed;
+
+    }
+
+    .navbar{
+        padding: 5% 5%;
+    }
+
+    .btn-login {
+        font-size: 1rem;
+        color: #22472c;
+        background-color: transparent;
+        padding: 10px;
+        border: 2px solid #22472c;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        width: auto;
+        /* Ajusta o tamanho do botão simples */
+        justify-content: center;
+    }
+
+    /* Esconde os ícones e tooltip em telas menores */
+    .btn-login .default-icon,
+    .btn-login .hidden-icon,
+    .btn-login .tooltip {
+        display: none;
+    }
+
+    /* Altera o texto do botão para ser apenas "Entrar" */
+    .btn-login::before {
+        content: "Entrar";
+        /* Mostra "Entrar" como texto simples */
+        font-size: 1rem;
+        color: #22472c;
+    }
+
+    .hamburger {
+        display: flex;
+        /* Exibe o ícone hambúrguer em telas menores */
+    }
+
+
+
+    .nav-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+
+    .animate__animated {
+        animation: none !important;
+    }
+
+    .nav-links {
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100%;
+        /* Faz com que o menu ocupe toda a altura da tela */
+        width: 250px;
+        /* Ajuste o tamanho da largura do menu */
+        background-color: #22472c;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        /* Mantém o menu fora da tela inicialmente */
+        transition: transform 0.3s ease-in-out;
+        z-index: 1400;
+        /* Certifica que o menu sobreponha outros elementos */
+
+
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+        /* Mostra o menu quando a classe 'active' é adicionada */
+    }
+
+    .nav-links li {
+        margin-bottom: 20px;
+        list-style: none;
+    }
+
+    .nav-links a {
+        color: white;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+
+    .login-item {
+        display: none;
+        /* Oculta o login na navbar e move-o para dentro do menu */
+    }
+
+
+
+    #hero {
+        margin-top: 30%;
+        padding: 0 20px;
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        background: none;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        text-align: center;
+        padding: 10px;
+
+    }
+
+    .hero-content h2 {
+        font-size: 1.8rem;
+        /* Um pouco maior que a sugestão anterior */
+        width: 500px;
+        margin-left: -40px;
+
+    }
+
+    .hero-content p {
+        font-size: 4px;
+        margin-left: 40px;
+        margin-bottom: 20px;
+        color: white;
+    }
+
+    .botão {
+        font-size: 16px;
+        /* Tamanho maior para o botão */
+        padding: 12px 25px;
+        margin-left: 20px;
+        margin-bottom: 20px;
+        width: 90%;
+        /* Aumenta a largura do botão */
+    }
+
+    .botão:hover {
+        background-color: #22472c;
+        color: white;
+    }
+
+    .hero-image {
+        display: none;
+    }
+}
+
+/* Estilos para telas médias, como tablets */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    #hero {
+        padding: 0 5%;
+        flex-direction: row;
+        height: 400px;
+    }
+
+    .hero-content {
+        max-width: 50%;
+        text-align: left;
+    }
+
+    .hero-content h2 {
+        font-size: 30px;
+        color: white;
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+
+    .botão {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        width: auto;
+        color: white;
+    }
+
+    .botão:hover {
+        color: white;
+    }
+
+    .hero-image img {
+        width: 60%;
+        height: auto;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .btn-login::before {
+        content: "";
+        /* Remove o texto "Entrar" nas telas grandes */
+    }
+}
+
+

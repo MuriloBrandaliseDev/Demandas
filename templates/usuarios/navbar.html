@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-icons">
+        <!-- Ícone com texto animado para Cadastrar Membro -->
+        <a
+          href="#"
+          aria-label="Cadastrar Membro"
+          title="Cadastrar Membro"
+          id="register-btn"
+        >
+          <span class="text-cadastro" id="cadastro-text">Cadastrar Membro</span>
+          <i class="fa-regular fa-address-card"></i>
+        </a>
+
+        <a
+          href="#"
+          aria-label="Configurações"
+          title="Configurações"
+          id="config-icon"
+        >
+          <i class="fa-solid fa-gear"></i>
+        </a>
+
+        <div class="menu-opcoes settings-menu" id="config-menu">
+          <a href="#"
+            ><i style="color: rgb(0, 209, 140)" class="fa-solid fa-user-tie"></i
+            ><span class="texto-i">Perfil</span></a
+          >
+          <a href="#"
+            ><i
+              style="color: rgb(0, 209, 140)"
+              class="fa-solid fa-screwdriver-wrench"
+            ></i
+            ><span class="texto-i">Configurações de Conta</span></a
+          >
+          <a href="#"
+            ><i style="color: rgb(0, 209, 140)" class="fa-solid fa-question"></i
+            ><span class="texto-i">Ajuda</span></a
+          >
+        </div>
+      </div>
+    </nav>
+    
+
+    <!-- Bloco de cadastro -->
+    <div class="overlay" id="registration-overlay">
+      <div class="registration-form">
+        <span class="close-btn" onclick="closeRegistrationForm()">
+          <i class="fa-solid fa-xmark"></i>
+        </span>
+        <h2>Cadastrar <span style="color: rgb(0, 194, 107)">Membro</span></h2>
+        <form id="registration-form" method="POST">
+          {% csrf_token %}
+          <input type="text" name="nome" placeholder="Nome" required />
+          <input type="email" name="email" placeholder="Email" required />
+          <input
+            type="number"
+            name="telefone"
+            placeholder="Telefone (Opcional)"
+          />
+          <input type="text" name="cargo" placeholder="Cargo (Opcional)" />
+          <button type="submit">Cadastrar</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Função para exibir notificações
+      function showNotification(message, type = 'success') {
+        const container = document.getElementById('notification-container');
+
+        // Criar o elemento da notificação
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        if (type === 'error') {
+          notification.classList.add('error');
+        } else {
+          notification.classList.add('success');
+        }
+
+        // Conteúdo da notificação
+        notification.innerHTML = `
+          <span>${message}</span>
+          <button class="close-btn">&times;</button>
+        `;
+
+        // Adicionar a notificação ao container
+        container.appendChild(notification);
+
+        // Remover a notificação após 5 segundos
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateY(-20px)';
+          setTimeout(() => {
+            if (container.contains(notification)) {
+              container.removeChild(notification);
+            }
+          }, 500); // Tempo para a animação de saída
+        }, 5000);
+
+        // Adicionar evento para o botão de fechar
+        notification.querySelector('.close-btn').addEventListener('click', () => {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateY(-20px)';
+          setTimeout(() => {
+            if (container.contains(notification)) {
+              container.removeChild(notification);
+            }
+          }, 500);
+        });
+      }
+
+      // Adiciona evento ao formulário de cadastro
+      document
+        .getElementById("registration-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Previne o comportamento padrão do formulário
+
+          const formData = new FormData(this); // Captura os dados do formulário
+
+          fetch("/cadastrar-membro/", {
+            method: "POST",
+            body: formData,
+            headers: {
+              "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                // Se a resposta não for OK, lança um erro
+                return response.json().then(err => { throw err; });
+              }
+              return response.json(); // Converte a resposta para JSON
+            })
+            .then((data) => {
+              // Verifica a resposta retornada
+              if (data.message) {
+                showNotification(data.message, 'success'); // Exibe mensagem de sucesso
+                closeRegistrationForm(); // Fecha o formulário
+                // Opcional: Limpar os campos do formulário
+                document.getElementById("registration-form").reset();
+              } else if (data.error) {
+                showNotification(`Erro: ${data.error}`, 'error'); // Exibe mensagem de erro retornada pelo servidor
+              }
+            })
+            .catch((error) => {
+              console.error("Erro:", error); // Loga o erro no console
+              if (error.error) {
+                showNotification(`Erro: ${error.error}`, 'error');
+              } else {
+                showNotification("Ocorreu um erro ao cadastrar o membro.", 'error'); // Alerta de erro geral
+              }
+            });
+        });
+
+      // Função para alternar a exibição do menu
+      function toggleMenu(iconId, menuId) {
+        const menu = document.getElementById(menuId);
+        menu.style.display =
+          menu.style.display === "none" || menu.style.display === ""
+            ? "block"
+            : "none";
+      }
+
+      // Eventos para mostrar/ocultar os menus ao clicar nos ícones
+      document
+        .getElementById("config-icon")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          toggleMenu("config-icon", "config-menu");
+        });
+
+      // Exibir o bloco de cadastro ao clicar no botão de Cadastrar
+      document
+        .getElementById("register-btn")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          document.getElementById("registration-overlay").style.display = "flex";
+        });
+
+      // Função para fechar o bloco de cadastro
+      function closeRegistrationForm() {
+        document.getElementById("registration-overlay").style.display = "none";
+      }
+
+      // Esconder os menus se clicar fora deles
+      window.addEventListener("click", function (event) {
+        const configMenu = document.getElementById("config-menu");
+        const configIcon = document.getElementById("config-icon");
+
+        if (
+          !configMenu.contains(event.target) &&
+          !configIcon.contains(event.target)
+        ) {
+          configMenu.style.display = "none";
+        }
+      });
+
+      // Funções de animação (opcional, caso estejam sendo usadas)
+      const cadastroText = document.getElementById("cadastro-text");
+      const icon = document.getElementById("icon");
+
+      // Função para esconder o texto com uma animação de retração e ampliação do ícone
+      function hideTextAndAnimateIcon() {
+        // Animação do texto: retração e desaparecimento
+        anime({
+          targets: cadastroText,
+          translateX: -40, // Move o texto mais para dentro
+          opacity: 0,
+          duration: 1000, // Duração da animação em milissegundos
+          easing: "easeInOutCubic",
+        });
+
+        // Animação do ícone: rotação e ampliação
+        anime({
+          targets: icon,
+          rotate: "1turn", // Gira o ícone uma volta completa
+          scale: 1.3, // Amplia o ícone em 1.3x
+          duration: 1000,
+          easing: "easeInOutCubic",
+        });
+      }
+
+      // Função para mostrar o texto e restaurar o ícone
+      function showTextAndResetIcon() {
+        // Animação do texto: retorna à posição inicial e visível
+        anime({
+          targets: cadastroText,
+          translateX: 0,
+          opacity: 1,
+          duration: 1000,
+          easing: "easeInOutCubic",
+        });
+
+        // Animação do ícone: retorna à rotação e escala iniciais
+        anime({
+          targets: icon,
+          rotate: 0, // Retorna o ícone à rotação inicial
+          scale: 1, // Retorna o ícone ao tamanho original
+          duration: 1000,
+          easing: "easeInOutCubic",
+        });
+      }
+
+      // Ciclo de animação: mostra por 5 segundos e esconde por 5 segundos para testar rapidamente
+      function startAnimationCycle() {
+        showTextAndResetIcon(); // Aparece inicialmente
+        setTimeout(() => hideTextAndAnimateIcon(), 5000); // Esconde após 5 segundos
+
+        setInterval(() => {
+          showTextAndResetIcon();
+          setTimeout(() => hideTextAndAnimateIcon(), 5000); // Alterna a cada 5 segundos para testar
+        }, 10000); // Ciclo total de 10 segundos
+      }
+
+      // Inicia o ciclo de animação
+      startAnimationCycle();
+    </script>
+  </body>
+</html>

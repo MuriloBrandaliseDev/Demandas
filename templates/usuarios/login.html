@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+
+    <!-- Carregar os arquivos estáticos -->
+    {% load static %}
+    {% load socialaccount %}
+
+    <!-- Link para o arquivo CSS de login -->
+    <link rel="stylesheet" href="{% static 'usuarios/css/login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magic/1.1.0/magic.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    <!-- Conteúdo da página de login -->
+    <section id="login">
+        <div class="background-shape shape-1"></div>
+        <div class="background-shape shape-11"></div>
+        <div class="background-shape shape-2"></div>
+        <div class="background-shape shape-3"></div>
+        <div class="background-shape shape-4"></div>
+        <div class="background-shape shape-5"></div>
+        <div class="background-shape shape-6"></div>
+        <div class="background-shape shape-7"></div>
+        <div class="background-shape shape-8"></div>
+        <div class="background-shape shape-9"></div>
+
+        
+
+        <section id="login">
+            <div id="login-container" class="login-container ">
+                <a href="{% url 'home' %}" class="btn-voltar"><i class="fa-solid fa-delete-left"></i></a>
+                <img src="{% static 'usuarios/imagens/images3.png' %}" alt="Descrição da Imagem">
+                <h2>Conecte-se</h2>
+
+                <!-- Exibir mensagens de erro ou sucesso -->
+                {% if messages %}
+                <div class="alert-container">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
+
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="text" id="username" name="username" placeholder="E-mail ou Username" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Senha" required>
+                            <span id="togglePassword" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button type="submit" class="btn-logar1">Logar</button>
+                        <a href="{% url 'registro' %}" class="registrar1">Registrar-se</a>
+                    </div>
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-google">Entrar com Google</a>
+                    <a href="{% url 'recuperar_senha' %}" class="btn-recuperar">Esqueceu sua senha?</a>
+                </form>
+            </div>      
+        </section>
+
+        {% if show_options %}
+        <div class="modal-overlay">
+            <div class="choice-modal">
+                <a href="{% url 'login' %}" class="VOLTAR"><i class="fa-solid fa-delete-left"></i></a>
+                <img src="{% static 'usuarios/imagens/paint4.png' %}" alt="Descrição da Imagem">
+                <h3>Escolha seu destino:</h3>
+                <div class="button-container">
+                    <a href="{% url 'base' %}" class="choice-button">Página Base</a>
+                    <a href="{% url 'gerador_assinaturas' %}" class="choice-button">Gerador de Assinaturas</a>
+                </div>
+            </div>    
+        </div>
+        {% endif %}
+
+        
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const alertElements = document.querySelectorAll('.alert');  // Seleciona todas as mensagens de alerta
+
+                alertElements.forEach(alert => {
+                    // Defina um tempo (em milissegundos) após o qual a mensagem será escondida
+                    setTimeout(() => {
+                        alert.style.transition = "opacity 0.5s ease";  // Adiciona uma transição suave
+                        alert.style.opacity = "0";  // Faz o alerta desaparecer
+
+                        // Remove o alerta do DOM após a animação de desaparecimento
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 500);  // Tempo da transição (em milissegundos)
+                    }, 5000);  // Tempo que o alerta ficará visível (5 segundos, neste caso)
+                });
+            });
+
+
+            document.addEventListener("DOMContentLoaded", function() {
+        const modalOverlay = document.querySelector('.modal-overlay');
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const loginContainer = document.getElementById("login-container");
+        const showOptions = "{{ show_options|yesno:'true,false' }}" === "true";
+        
+        if (showOptions) {
+            loginContainer.style.display = "none"; // Oculta o conteúdo do login
+        }
+    });
+        </script>
+        <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

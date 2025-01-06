@@ -1,0 +1,281 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.background-shape {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #84f6d8cc;
+    animation: float 8s ease-in-out infinite;
+}
+
+/* Tamanhos e posições das formas */
+.shape-1 {
+    width: 250px;
+    height: 250px;
+    top: -50px;
+    left: -50px;
+    
+}
+
+.shape-11{
+    width: 180px;
+    height: 180px;
+    top: -15px;
+    left: -15px;
+    background-color: #3d6f625c;
+}
+
+.shape-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    right: -100px;
+
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    bottom: 50px;
+    left: 50px;
+
+}
+
+.shape-4 {
+    width: 150px;
+    height: 150px;
+    top: 10px;
+    right: 15%;
+}
+
+.shape-5 {
+    width: 80px;
+    height: 80px;
+    top: 40%;
+    background-color: #84f6d83d;
+    left: 25%;
+}
+
+.shape-6 {
+    width: 80px;
+    height: 80px;
+    bottom: 20%;
+    right: 30%;
+    background-color: #84f6d839;
+
+}
+
+.shape-7{
+    width: 200px;
+    height: 200px;
+    bottom: -40px;
+    right: -40px;
+    background-color: #3d6f625c;
+
+}
+
+.shape-8{
+    width: 100px;
+    height: 100px;
+    bottom: 75px;
+    left: 75px;
+    background-color: #3d6f625c;
+}
+
+.shape-9 {
+    width: 100px;
+    height: 100px;
+    top: 35px;
+    right: 254px;
+    background-color: #3d6f625c;
+
+}
+
+/* Animação de flutuação */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(30px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+
+.registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+
+}
+
+/* Bloco de erro para exibir a mensagem */
+.error-block {
+    background-color: #ffdddd;
+    color: #d8000c;
+    padding: 5px;
+    border-left: 6px solid #f44336;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 10px;
+}
+
+.error-block p {
+    margin-bottom: 20px;
+}
+
+.mensagem{
+
+    color: #1e5425;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.mensagem:hover {
+    text-decoration: underline;
+}
+
+form {
+    z-index: 1;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);    
+    border-radius: 20px;
+    padding: 2rem;
+    
+}
+
+
+.form-box {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+}
+
+
+.form-box img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin-bottom: 1.5rem;
+    color: #1e5425;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 0.5rem;
+    border: 1px solid #1e5425;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: #84bf78;
+}
+
+/* Campos com erro - borda vermelha */
+input.is-invalid {
+    border: 2px solid #e74c3c;
+}
+
+/* Mensagem de erro personalizada */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+
+.btn-submit {
+    display: inline-block;
+    padding: 12px 30px;
+    margin: 10px;
+    background-color: #22472c; /* Cor de fundo verde escuro */
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem; /* Tamanho da fonte um pouco maior */
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px; /* Bordas bem arredondadas */
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: all 0.4s ease; /* Transição suave */
+}
+
+.btn-submit:hover {
+    background-color: #1e824c; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); 
+    transform: translateY(-3px); 
+    color: white;
+}
+
+.btn-submit:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+}
+
+p {
+    margin-top: 1rem;
+    color: #777;
+}
+
+p a {
+    color: #22472c;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: none;
+}
+
+.btn-voltarLogin{
+    color:#1e5425;
+    
+}
+
+.btn-voltarLogin:hover{
+    text-decoration: underline;
+}

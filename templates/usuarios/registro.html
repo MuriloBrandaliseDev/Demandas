@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/registro.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="background-shape shape-1"></div>
+    <div class="background-shape shape-11"></div>
+    <div class="background-shape shape-2"></div>
+    <div class="background-shape shape-3"></div>
+    <div class="background-shape shape-4"></div>
+    <div class="background-shape shape-5"></div>
+    <div class="background-shape shape-6"></div>
+    <div class="background-shape shape-7"></div>
+    <div class="background-shape shape-8"></div>
+    <div class="background-shape shape-9"></div>
+
+    <div class="registro-container">
+        <div class="form-box">
+            <img src="{% static 'usuarios/imagens/images3.png' %}" alt="Descrição da Imagem">
+            <h1>Crie sua Conta</h1>
+            {% if messages %}
+            <div class="message-block">
+                {% for message in messages %}
+                    <p class="message-text">{{ message }}</p>
+                {% endfor %}
+            </div>
+            <!-- Esconde a mensagem após 5 segundos -->
+            <script>
+                setTimeout(function() {
+                    const messageBlock = document.querySelector('.message-block');
+                    if (messageBlock) {
+                        messageBlock.style.display = 'none';
+                    }
+                }, 5000); // Esconde após 5 segundos
+            </script>
+        {% endif %}
+        
+        {% if success %}
+            <script>
+                setTimeout(function() {
+                    window.location.href = "{% url 'login' %}";
+                }, 5000); // Redireciona após 5 segundos
+            </script>
+        {% endif %}
+        
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_username"><i class="fas fa-user"></i></label>
+                    <input type="text" id="id_username" name="username" placeholder="Nome de Usuário"
+                        autocomplete="username" required>
+                    {% if form.username.errors %}
+                    <script>document.getElementById("id_username").classList.add("is-invalid");</script>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email"><i class="fas fa-envelope"></i></label>
+                    <input type="email" id="id_email" name="email" placeholder="E-mail" autocomplete="email" required>
+                    {% if form.email.errors %}
+                    <script>document.getElementById("id_email").classList.add("is-invalid");</script>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password1"><i class="fas fa-lock"></i></label>
+                    <input type="password" id="id_password1" name="password1" placeholder="Senha"
+                        autocomplete="new-password" required>
+                    <span id="togglePassword1" class="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                    {% if form.password1.errors %}
+                    <script>document.getElementById("id_password1").classList.add("is-invalid");</script>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password2"><i class="fas fa-lock"></i></label>
+                    <input type="password" id="id_password2" name="password2" placeholder="Confirme a Senha"
+                        autocomplete="new-password" required>
+                    <span id="togglePassword2" class="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                    {% if form.password2.errors %}
+                    <script>document.getElementById("id_password2").classList.add("is-invalid");</script>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn-submit">Registrar</button>
+            </form>
+            <p>Já tem uma conta? <a href="{% url 'login' %}" class="btn-voltarLogin">Faça login</a></p>
+
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        const togglePassword1 = document.querySelector("#togglePassword1");
+        const password1 = document.querySelector("#id_password1");
+
+        togglePassword1.addEventListener("click", function () {
+            const type = password1.getAttribute("type") === "password" ? "text" : "password";
+            password1.setAttribute("type", type);
+            this.querySelector("i").classList.toggle("fa-eye");
+            this.querySelector("i").classList.toggle("fa-eye-slash");
+        });
+
+        const togglePassword2 = document.querySelector("#togglePassword2");
+        const password2 = document.querySelector("#id_password2");
+
+        togglePassword2.addEventListener("click", function () {
+            const type = password2.getAttribute("type") === "password" ? "text" : "password";
+            password2.setAttribute("type", type);
+            this.querySelector("i").classList.toggle("fa-eye");
+            this.querySelector("i").classList.toggle("fa-eye-slash");
+        });
+    </script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Membros</title>
+  {% load static %}
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f7f7f1;
+      height: 100vh;
+    }
+
+    /* Container principal */
+    .tabela-container {
+      margin: 0 auto;
+      width: 95%;
+      max-width: 1280px;
+      margin-top: 3%;
+      margin-left: 190px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border: solid 1px #ddd;
+    }
+
+    .tabela-container h1 {
+      font-size: 27px;
+      color: #333;
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    /* Tabela */
+    .tabela-membros {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .tabela-membros th,
+    .tabela-membros td {
+      text-align: center;
+      padding: 10px;
+      border-bottom: 1px solid #176817;
+    }
+
+    .tabela-membros th {
+      background-color: rgb(0, 209, 140);
+      font-weight: bold;
+      color: white;
+    }
+
+    .tabela-membros th i {
+      margin-right: 5px;
+    }
+
+    .tabela-membros tr:hover {
+      background-color: #e6e6e6;
+    }
+
+    /* Ações */
+    .btn-acao {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 14px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+
+    .btn-acao i {
+      font-size: 13px;
+    }
+
+    .btn-editar {
+      background-color: #1d7926;
+    }
+
+    .btn-editar:hover {
+      background-color: #176817;
+    }
+
+    .btn-deletar {
+      background-color: #202020;
+    }
+
+    .btn-deletar:hover {
+      background-color: #c82333;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+
+      .tabela-membros th,
+      .tabela-membros td {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      .btn-acao {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+      }
+    }
+
+    /* ======================================================
+   1. Estilos Gerais para o Modal de Confirmação
+   ====================================================== */
+
+    /* Classe que exibe o modal */
+    .modall {
+      display: flex;
+      /* Utiliza flexbox para centralizar o conteúdo */
+      position: fixed;
+      /* Fixa o modal na tela */
+      top: 0;
+      left: 0;
+      width: 100%;
+      /* Largura total da viewport */
+      height: 100%;
+      /* Altura total da viewport */
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Fundo semi-transparente */
+      justify-content: center;
+      /* Centraliza horizontalmente */
+      align-items: center;
+      /* Centraliza verticalmente */
+      z-index: 1000;
+      /* Garante que o modal fique acima de outros elementos */
+    }
+
+    /* Classe que esconde o modal */
+    .hidden {
+      display: none;
+      /* Esconde o modal */
+    }
+
+    .modalll-content {
+      background-color: #ffffff;
+      /* Fundo branco para o conteúdo */
+      padding: 20px;
+      /* Espaçamento interno */
+      border-radius: 12px;
+      /* Bordas arredondadas */
+      width: 90%;
+      /* Largura fixa */
+      max-width: 320px;
+      /* Responsividade: máximo de 90% da largura da viewport */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      /* Sombra para destacar o modal */
+      text-align: center;
+      /* Centraliza o texto */
+      position: relative;
+      /* Para posicionamento de elementos internos, se necessário */
+    }
+
+    /* Título do Modal */
+    .modalll-content h1 {
+      margin-bottom: 10px;
+      /* Espaço abaixo do título */
+      font-size: 25px;
+      /* Tamanho da fonte */
+      color: #242424;
+      /* Cor do texto */
+    }
+
+    /* Parágrafo do Modal */
+    .modalll-content p {
+      margin-bottom: 30px;
+      /* Espaço abaixo do parágrafo */
+      font-size: 16px;
+      /* Tamanho da fonte */
+      color: #1a1a1a;
+      /* Cor do texto */
+    }
+
+    /* Botão de Confirmar Exclusão */
+    .modal-ebutton {
+      background-color: #232323;
+      /* Cor de fundo verde */
+      color: #ffffff;
+      /* Cor do texto branco */
+      border: none;
+      /* Remove a borda padrão */
+      padding: 10px 20px;
+      /* Espaçamento interno */
+      margin-right: 10px;
+      /* Espaço à direita do botão */
+      border-radius: 4px;
+      /* Bordas arredondadas */
+      cursor: pointer;
+      /* Cursor de ponteiro ao passar o mouse */
+      font-size: 16px;
+      /* Tamanho da fonte */
+      transition: all 0.1s;
+    }
+
+    .modal-ebutton:hover {
+      background-color: #c90a0a;
+      transform: translateY(-3px);
+    }
+
+    /* Botão de Cancelar Exclusão */
+    .modal-cbutton {
+      background-color: #1d7926;
+      color: white;
+      transition: all 0.1s;
+      border: none;
+      /* Remove a borda padrão */
+      padding: 10px 20px;
+      /* Espaçamento interno */
+      border-radius: 4px;
+      /* Bordas arredondadas */
+      cursor: pointer;
+      /* Cursor de ponteiro ao passar o mouse */
+      font-size: 16px;
+      /* Tamanho da fonte */
+    }
+
+    .modal-cbutton:hover {
+      background-color: #125d1a;
+      transform: translateY(-3px);
+    }
+
+    /* Classe que exibe o modal de edição */
+    .modal-edit {
+      display: flex;
+      /* Utiliza flexbox para centralizar o conteúdo */
+      position: fixed;
+      /* Fixa o modal na tela */
+      top: 0;
+      left: 0;
+      width: 100%;
+      /* Largura total da viewport */
+      height: 100%;
+      /* Altura total da viewport */
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Fundo semi-transparente */
+      justify-content: center;
+      /* Centraliza horizontalmente */
+      align-items: center;
+      /* Centraliza verticalmente */
+      z-index: 1001;
+      /* Garante que o modal fique acima de outros elementos */
+    }
+
+    /* Classe que esconde o modal de edição */
+    .hidden {
+      display: none;
+      /* Esconde o modal */
+    }
+
+    /* Conteúdo do Modal de Edição */
+    .modal-edit-content {
+      background-color: #ffffff;
+      /* Fundo branco para o conteúdo */
+      padding: 30px 40px;
+      /* Espaçamento interno */
+      border-radius: 8px;
+      /* Bordas arredondadas */
+      width: 400px;
+      /* Largura fixa */
+      max-width: 90%;
+      /* Responsividade: máximo de 90% da largura da viewport */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      /* Sombra para destacar o modal */
+      text-align: left;
+      /* Alinha o texto à esquerda */
+      position: relative;
+      /* Para posicionamento de elementos internos, se necessário */
+    }
+
+    /* Título do Modal de Edição */
+    .modal-edit-content h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      /* Espaço abaixo do título */
+      font-size: 24px;
+      /* Tamanho da fonte */
+      color: #333333;
+      /* Cor do texto */
+    }
+
+    /* Botão de Fechamento do Modal de Edição */
+    .close-edit-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #888888;
+      cursor: pointer;
+    }
+
+    .close-edit-modal:hover {
+      color: #333333;
+    }
+
+    /* Formulário dentro do Modal de Edição */
+    .modal-edit-content form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Agrupamento de Campos do Formulário */
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    /* Estilos para Labels */
+    .form-group label {
+
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333333;
+
+    }
+
+    .form-group i {
+      margin-left: 5px;
+    }
+
+    /* Estilos para Inputs */
+    .form-group input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #0c5b0a;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus {
+      background-color: #cacaca;
+    }
+
+    .form-group input:hover {
+      background-color: #e3e3e3;
+      transform: translateX(3px);
+    }
+
+    /* Seção de Ações do Modal de Edição */
+    .modal-edit-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* Feedback de Erro ou Sucesso */
+    .feedback {
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .feedback.error {
+      color: #c82333;
+    }
+
+    .feedback.success {
+      color: #28a745;
+    }
+
+    /* Botão Salvar no Modal de Edição */
+    .modal-edit-save-button {
+      background-color: #28a745;
+      /* Verde para indicar ação positiva */
+      color: #ffffff;
+      /* Texto branco */
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-edit-save-button:hover {
+      transform: translateY(-3px);
+      background-color: #218838;
+    }
+
+    /* Botão Cancelar no Modal de Edição */
+    .modal-edit-cancel-button {
+      background-color: #1e1e1e;
+      /* Vermelho para indicar cancelamento */
+      color: #ffffff;
+      /* Texto branco */
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-edit-cancel-button:hover {
+      background-color: #c82333;
+      transform: translateY(-3px);
+    }
+
+    /* Responsividade para Modal de Edição */
+    @media (max-width: 480px) {
+      .modal-edit-content {
+        width: 95%;
+        padding: 20px 25px;
+      }
+
+      .modal-edit-content h1 {
+        font-size: 20px;
+      }
+
+      .form-group label,
+      .form-group input {
+        font-size: 14px;
+      }
+
+      .modal-edit-save-button,
+      .modal-edit-cancel-button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+
+    /* ======================================================
+          4. Estilos para Notificações
+         ====================================================== */
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 5px;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 1002;
+    }
+
+    .notification.show {
+      opacity: 1;
+    }
+
+    .notification.success {
+      background-color: #28a745;
+    }
+
+    .notification.error {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tabela-container">
+    <h1>Equipe <span style="color: rgb(0, 194, 107)">Querolar</span></h1>
+    <table class="tabela-membros">
+      <thead>
+        <tr>
+          <th><i class="fa-solid fa-id-badge"></i> ID</th>
+          <th><i class="fa-solid fa-envelope"></i> Email</th>
+          <th><i class="fa-solid fa-user"></i> Nome</th>
+          <th><i class="fa-solid fa-phone"></i> Número</th>
+          <th><i class="fa-solid fa-briefcase"></i> Cargo</th>
+          <th><i class="fa-solid fa-gear"></i> Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for membro in membros %}
+        <tr id="membro-{{ membro.id }}">
+          <td>{{ membro.id }}</td>
+          <td>{{ membro.email }}</td>
+          <td>{{ membro.nome }}</td>
+          <td>{{ membro.telefone|default:"Pendente" }}</td>
+          <td>{{ membro.cargo|default:"Pendente" }}</td>
+          <td>
+            <button class="btn-acao btn-editar" title="Editar" data-id="{{ membro.id }}" data-email="{{ membro.email }}"
+              data-nome="{{ membro.nome }}" data-telefone="{{ membro.telefone }}" data-cargo="{{ membro.cargo }}">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn-acao btn-deletar" title="Excluir" data-id="{{ membro.id }}">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">Nenhum membro cadastrado ainda.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal de Confirmação para Exclusão de Membros -->
+  <div id="confirmacaoModalEquipe" class="modall hidden">
+    <div class="modalll-content">
+      <h1>Quero<span style="color: rgb(0, 194, 107)">lar</span></h1>
+      <p>Tem certeza que deseja excluir este membro?</p>
+      <!-- Botão para confirmar exclusão individual -->
+      <button id="aceitarExclusao" class="modal-ebutton">Sim, excluir</button>
+      <!-- Botão para cancelar exclusão individual -->
+      <button id="negarExclusao" class="modal-cbutton">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Modal de Edição de Membro -->
+  <div id="editModal" class="modal-edit hidden">
+    <div class="modal-edit-content">
+      <h1>Editar <span style="color: rgb(0, 194, 107)">Membro</span></h1>
+      <form id="editForm">
+        <input type="hidden" id="edit-membro-id" name="membro_id" />
+
+        <div class="form-group">
+          <label for="edit-email">Email <i class="fa-regular fa-envelope"></i></label>
+          <input type="email" id="edit-email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-nome">Nome <i class="fa-solid fa-user"></i></label>
+          <input type="text" id="edit-nome" name="nome" required />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-telefone">Número <i class="fa-solid fa-phone"></i></label>
+          <input type="text" id="edit-telefone" name="telefone" />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-cargo">Cargo <i class="fa-regular fa-address-card"></i></label>
+          <input type="text" id="edit-cargo" name="cargo" />
+        </div>
+
+        <div id="edit-feedback" class="feedback"></div>
+
+        <div class="modal-edit-actions">
+          <button type="submit" class="modal-edit-save-button">Salvar</button>
+          <button type="button" class="modal-edit-cancel-button">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Elemento para Notificações -->
+  <div id="notification" class="notification hidden"></div>
+
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
