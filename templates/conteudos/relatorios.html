@@ -278,6 +278,16 @@
           {% endif %}
         </div>
 
+        <!-- Dentro do formulário existente -->
+<div class="form-group">
+  <label for="{{ form.data_demanda.id_for_label }}">Data da Demanda</label>
+  {{ form.data_demanda }} 
+  {% if form.data_demanda.errors %}
+      <div class="error">{{ form.data_demanda.errors }}</div>
+  {% endif %}
+</div>
+
+
         <div class="form-buttons">
           <button type="submit" class="btn btn-primary">Cadastrar Nova Demanda
           </button>

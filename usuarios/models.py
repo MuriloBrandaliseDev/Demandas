@@ -72,11 +72,10 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+from django.db import models
+from datetime import datetime
+
 class Demanda(models.Model):
-    """
-    Modelo que representa uma demanda ou solicitação.
-    Inclui informações como título, descrição, status, urgência, entre outros.
-    """
     STATUS_CHOICES = [
         ('novo', 'Novo'),
         ('em_andamento', 'Em Andamento'),
@@ -113,6 +112,10 @@ class Demanda(models.Model):
         verbose_name="Data de Criação", 
         editable=False
     )
+    data_demanda = models.DateField(
+        verbose_name="Data da Demanda",
+        default=datetime.now
+    )
     nome_solicitante = models.CharField(
         max_length=255, 
         verbose_name="Nome do Solicitante"
@@ -146,6 +149,12 @@ class Demanda(models.Model):
     def __str__(self):
         return f"{self.titulo_projeto} ({self.get_status_display()})"
 
+    def save(self, *args, **kwargs):
+        if not self.data_demanda:
+            self.data_demanda = self.data_criacao.date()
+        super().save(*args, **kwargs)
+
+
 
 from django.db import models
 
@@ -159,3 +168,6 @@ class Membro(models.Model):
 
     def __str__(self):
         return self.nome
+    
+
+

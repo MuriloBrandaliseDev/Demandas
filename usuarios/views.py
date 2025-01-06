@@ -108,15 +108,69 @@ def dashboard(request):
         return render(request, 'base.html')
     
 
+# usuarios/views.py
+
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from .models import Demanda
+from datetime import datetime
+import calendar
+
 def calendario(request):
     """
-    View para exibir o calendário via AJAX.
+    View para exibir o calendário com demandas cadastradas.
     """
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('conteudos/calendario.html', request=request)
+    if request.headers.get('x-requested_with') == 'XMLHttpRequest':
+        ano = datetime.now().year
+        
+        # Lista de nomes dos meses em Português Brasileiro
+        meses_pt_br = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ]
+        
+        # Buscar demandas do ano atual que estão visíveis
+        demandas = Demanda.objects.filter(data_demanda__year=ano, visivel=True)
+        
+        # Organizar demandas por mês e dia
+        demandas_por_mes_dia = {}
+        for demanda in demandas:
+            mes = demanda.data_demanda.month
+            dia = demanda.data_demanda.day
+            if mes not in demandas_por_mes_dia:
+                demandas_por_mes_dia[mes] = {}
+            if dia not in demandas_por_mes_dia[mes]:
+                demandas_por_mes_dia[mes][dia] = []
+            demandas_por_mes_dia[mes][dia].append(demanda)
+        
+        # Preparar lista de meses com nome e dias
+        meses = []
+        for mes_num in range(1, 13):
+            nome_mes = meses_pt_br[mes_num - 1]
+            dias_no_mes = calendar.monthrange(ano, mes_num)[1]
+            dias = []
+            for dia in range(1, dias_no_mes + 1):
+                demandas_do_dia = demandas_por_mes_dia.get(mes_num, {}).get(dia, [])
+                dias.append({
+                    'dia': dia,
+                    'demandas': demandas_do_dia
+                })
+            meses.append({
+                'nome': nome_mes,
+                'dias': dias
+            })
+        
+        # Renderizar o template com os dados
+        html = render_to_string('conteudos/calendario.html', {
+            'meses': meses,
+            'ano': ano
+        }, request=request)
+        
         return JsonResponse({'html': html})
     else:
         return render(request, 'base.html')
+
 
 # ======================================================
 # 5. Relatórios (CRUD de Demandas via AJAX)
@@ -538,16 +592,6 @@ def assinatura_gerada(request):
     return render(request, 'usuarios/assinatura_gerada.html')
 
 
-
-# ======================================================
-# 19. Demandas em JSON (API)
 # ======================================================
 
-# views.py
 
-from django.shortcuts import render
-from .models import Demanda
-
-def calendario_view(request):
-    demandas = Demanda.objects.filter(visivel=True)
-    return render(request, 'conteudos/calendario.html', {'demandas': demandas})

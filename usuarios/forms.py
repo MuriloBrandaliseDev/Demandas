@@ -68,7 +68,12 @@ class DemandaForm(forms.ModelForm):
         (True, 'Sim'),
         (False, 'Não'),
     )
-    
+
+    data_demanda = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Data da Demanda"
+    )
+
     taxa_urgencia = forms.TypedChoiceField(
         choices=TAXA_URGENCIA_CHOICES,
         widget=forms.RadioSelect,
@@ -81,15 +86,17 @@ class DemandaForm(forms.ModelForm):
     class Meta:
         model = Demanda
         fields = [
-            'nome_solicitante', 
-            'categoria', 
-            'taxa_urgencia', 
-            'titulo_projeto', 
-            'descricao', 
-            'status', 
-            'urgencia', 
-            'arquivo_adicional'
+            'nome_solicitante',
+            'categoria',
+            'taxa_urgencia',
+            'titulo_projeto',
+            'descricao',
+            'status',
+            'urgencia',
+            'arquivo_adicional',
+            'data_demanda',
         ]
+
         widgets = {
             'nome_solicitante': forms.TextInput(attrs={'placeholder': 'Nome do Solicitante'}),
             'categoria': forms.TextInput(attrs={'placeholder': 'Área do Projeto'}),
