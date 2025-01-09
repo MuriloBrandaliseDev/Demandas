@@ -104,6 +104,7 @@ class DemandaForm(forms.ModelForm):
             'descricao': forms.Textarea(attrs={'placeholder': 'Descreva seu projeto (desenvolvimento, manutenção, automação, etc.)'}),
             'status': forms.Select(attrs={'class': 'status-dropdown'}),
             'urgencia': forms.Select(attrs={'class': 'urgencia-dropdown'}),
+            'data_demanda': forms.DateInput(attrs={'type': 'date'}),
             'arquivo_adicional': forms.ClearableFileInput(attrs={'class': 'arquivo-input'}),
         }
 

@@ -1,308 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
 
-    {% load static %}
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
 
-      * {
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-        margin: 0;
-        padding: 0;
-      }
+  {% load static %}
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
-      body {
-        background-color: #f7f7f1;
-        height: 100vh;
-      }
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
 
-      /* Estilização geral do formulário */
-      .form-container {
-        margin: 0 auto;
-        width: 95%;
-        max-width: 1280px;
-        margin-top: 3%;
-        margin-left: 190px;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-      }
+    body {
+      background-color: #f7f7f1;
+      height: 100vh;
+    }
 
-      .form-container h1 {
-        font-size: 27px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 20px;
-        text-align: center;
-      }
+    /* Estilização geral do formulário */
+    .form-container {
+      margin: 0 auto;
+      width: 95%;
+      max-width: 1280px;
+      margin-top: 3%;
+      margin-left: 190px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
 
-      /* Estilização das linhas do formulário */
+    .form-container h1 {
+      font-size: 27px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Estilização das linhas do formulário */
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      /* Espaçamento entre os grupos de formulário */
+      margin-bottom: 15px;
+    }
+
+    .data {
+      margin-top: 10px;
+    }
+
+    /* Estilização dos grupos de formulário */
+    .form-group {
+      flex: 1;
+      min-width: 0;
+      /* Evita que os campos fiquem muito largos */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Estilização das labels */
+    .form-group label {
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Estilização dos inputs, textareas e selects */
+    .form-group input[type="text"],
+    .form-group textarea,
+    .form-group select,
+    .form-group input[type="file"] {
+      color: #333;
+      /* Cor do texto */
+      width: 100%;
+      /* Largura total do container */
+      padding: 8px 12px;
+      /* Espaçamento interno */
+      border: solid 1px #ccc;
+      /* Borda cinza clara */
+      border-radius: 5px;
+      /* Cantos arredondados */
+      box-sizing: border-box;
+      /* Inclui padding e border no tamanho total */
+      outline: none;
+      /* Remove o contorno padrão */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      /* Transição suave */
+    }
+
+    /* Adicionando efeito ao focar */
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus,
+    .form-group input[type="file"]:focus {
+      border-color: #0bc16f;
+      /* Altera a cor da borda ao focar */
+      box-shadow: 0 0 5px rgba(1, 103, 110, 0.5);
+      /* Efeito de brilho */
+    }
+
+    /* Adicionando efeito ao passar o mouse */
+    .form-group input[type="text"]:hover,
+    .form-group textarea:hover,
+    .form-group select:hover,
+    .form-group input[type="file"]:hover {
+      border-color: #0bc16f;
+      /* Cor da borda ao passar o mouse */
+      background-color: #f0ffff;
+      /* Fundo azul claro ao passar o mouse */
+      box-shadow: 0 0 5px rgba(1, 114, 69, 0.5);
+      /* Efeito de brilho */
+      cursor: pointer;
+      /* Mostra o cursor de clique */
+    }
+
+    /* Estilização dos botões de rádio */
+    .form-group .radio-select {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .form-group input[type="radio"] {
+      margin-right: 5px;
+    }
+
+    /* Estilização dos botões */
+    .form-buttons {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #1d7926;
+      color: white;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #175a17;
+      transform: translateY(-5px);
+    }
+
+    .btn-danger {
+      background-color: #e50901;
+      color: white;
+      transition: all 0.2s;
+    }
+
+    .btn-danger:hover {
+      background-color: #a00500;
+      transform: translateY(-5px);
+    }
+
+    /* Estilização de erros */
+    .error {
+      color: #dc3545;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+
+    /* Responsividade: Empilhe os campos em telas menores */
+    @media (max-width: 600px) {
       .form-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px; /* Espaçamento entre os grupos de formulário */
-        margin-bottom: 15px;
-      }
-
-      /* Estilização dos grupos de formulário */
-      .form-group {
-        flex: 1;
-        min-width: 0; /* Evita que os campos fiquem muito largos */
-        display: flex;
         flex-direction: column;
       }
+    }
 
-      /* Estilização das labels */
-      .form-group label {
-        margin-top: 10px;
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #333;
-      }
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Fundo escuro */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
 
-      /* Estilização dos inputs, textareas e selects */
-      .form-group input[type="text"],
-      .form-group textarea,
-      .form-group select,
-      .form-group input[type="file"] {
-        color: #333; /* Cor do texto */
-        width: 100%; /* Largura total do container */
-        padding: 8px 12px; /* Espaçamento interno */
-        border: solid 1px #ccc; /* Borda cinza clara */
-        border-radius: 5px; /* Cantos arredondados */
-        box-sizing: border-box; /* Inclui padding e border no tamanho total */
-        outline: none; /* Remove o contorno padrão */
-        transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
-      }
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
 
-      /* Adicionando efeito ao focar */
-      .form-group input[type="text"]:focus,
-      .form-group textarea:focus,
-      .form-group select:focus,
-      .form-group input[type="file"]:focus {
-        border-color: #0bc16f; /* Altera a cor da borda ao focar */
-        box-shadow: 0 0 5px rgba(1, 103, 110, 0.5); /* Efeito de brilho */
-      }
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
 
-      /* Adicionando efeito ao passar o mouse */
-      .form-group input[type="text"]:hover,
-      .form-group textarea:hover,
-      .form-group select:hover,
-      .form-group input[type="file"]:hover {
-        border-color: #0bc16f; /* Cor da borda ao passar o mouse */
-        background-color: #f0ffff; /* Fundo azul claro ao passar o mouse */
-        box-shadow: 0 0 5px rgba(1, 114, 69, 0.5); /* Efeito de brilho */
-        cursor: pointer; /* Mostra o cursor de clique */
-      }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
 
-      /* Estilização dos botões de rádio */
-      .form-group .radio-select {
-        display: flex;
-        gap: 10px;
-        margin-top: 5px;
-      }
+<body>
+  <div id="feedback"></div>
 
-      .form-group input[type="radio"] {
-        margin-right: 5px;
-      }
-
-      /* Estilização dos botões */
-      .form-buttons {
-        display: flex;
-        justify-content: flex-start;
-        gap: 10px;
-        margin-top: 20px;
-      }
-
-      .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-      }
-
-      .btn-primary {
-        background-color: #1d7926;
-        color: white;
-        transition: all 0.2s;
-      }
-
-      .btn-primary:hover {
-        background-color: #175a17;
-        transform: translateY(-5px);
-      }
-
-      .btn-danger {
-        background-color: #e50901;
-        color: white;
-        transition: all 0.2s;
-      }
-
-      .btn-danger:hover {
-        background-color: #a00500;
-        transform: translateY(-5px);
-      }
-
-      /* Estilização de erros */
-      .error {
-        color: #dc3545;
-        font-size: 0.9em;
-        margin-top: 5px;
-      }
-
-      /* Responsividade: Empilhe os campos em telas menores */
-      @media (max-width: 600px) {
-        .form-row {
-          flex-direction: column;
-        }
-      }
-
-      /* Modal */
-      .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-      }
-
-      .modal-content {
-        background: white;
-        padding: 40px;
-        border-radius: 5px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .modal.show {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .hidden {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="feedback"></div>
-
-    <form id="demandaForm" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="form-container">
-        <h1>Cadastrar <span style="color: rgb(0, 194, 107)">demandas</span></h1>
-        <!-- Primeira Linha: Nome do Solicitante e Categoria -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="{{ form.nome_solicitante.id_for_label }}"
-              >Nome do Solicitante</label
-            >
-            {{ form.nome_solicitante }} {% if form.nome_solicitante.errors %}
-            <div class="error">{{ form.nome_solicitante.errors }}</div>
-            {% endif %}
-          </div>
-
-          <div class="form-group">
-            <label for="{{ form.categoria.id_for_label }}">Categoria</label>
-            {{ form.categoria }} {% if form.categoria.errors %}
-            <div class="error">{{ form.categoria.errors }}</div>
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Segunda Linha: Taxa de Urgência e Título do Projeto -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="{{ form.taxa_urgencia.id_for_label }}"
-              >Taxa de Urgência Necessária</label
-            >
-            {{ form.taxa_urgencia }} {% if form.taxa_urgencia.errors %}
-            <div class="error">{{ form.taxa_urgencia.errors }}</div>
-            {% endif %}
-          </div>
-
-          <div class="form-group">
-            <label for="{{ form.titulo_projeto.id_for_label }}"
-              >Título do Projeto</label
-            >
-            {{ form.titulo_projeto }} {% if form.titulo_projeto.errors %}
-            <div class="error">{{ form.titulo_projeto.errors }}</div>
-            {% endif %}
-          </div>
-        </div>
-
+  <form id="demandaForm" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-container">
+      <h1>Cadastrar <span style="color: rgb(0, 194, 107)">demandas</span></h1>
+      <!-- Primeira Linha: Nome do Solicitante e Categoria -->
+      <div class="form-row">
         <div class="form-group">
-          <label for="{{ form.descricao.id_for_label }}">Descrição</label>
-          {{ form.descricao }} {% if form.descricao.errors %}
-          <div class="error">{{ form.descricao.errors }}</div>
+          <label for="{{ form.nome_solicitante.id_for_label }}">Nome do Solicitante</label>
+          {{ form.nome_solicitante }} {% if form.nome_solicitante.errors %}
+          <div class="error">{{ form.nome_solicitante.errors }}</div>
           {% endif %}
         </div>
 
         <div class="form-group">
-          <label for="{{ form.status.id_for_label }}">Status</label>
-          {{ form.status }} {% if form.status.errors %}
-          <div class="error">{{ form.status.errors }}</div>
+          <label for="{{ form.categoria.id_for_label }}">Categoria</label>
+          {{ form.categoria }} {% if form.categoria.errors %}
+          <div class="error">{{ form.categoria.errors }}</div>
           {% endif %}
-        </div>
-
-        <div class="form-group">
-          <label for="{{ form.urgencia.id_for_label }}">Urgência</label>
-          {{ form.urgencia }} {% if form.urgencia.errors %}
-          <div class="error">{{ form.urgencia.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-group">
-          <label for="{{ form.arquivo_adicional.id_for_label }}"
-            >Arquivo Adicional</label
-          >
-          {{ form.arquivo_adicional }} {% if form.arquivo_adicional.errors %}
-          <div class="error">{{ form.arquivo_adicional.errors }}</div>
-          {% endif %}
-        </div>
-
-        <!-- Dentro do formulário existente -->
-<div class="form-group">
-  <label for="{{ form.data_demanda.id_for_label }}">Data da Demanda</label>
-  {{ form.data_demanda }} 
-  {% if form.data_demanda.errors %}
-      <div class="error">{{ form.data_demanda.errors }}</div>
-  {% endif %}
-</div>
-
-
-        <div class="form-buttons">
-          <button type="submit" class="btn btn-primary">Cadastrar Nova Demanda
-          </button>
-          <button type="reset" class="btn btn-danger">Resetar</button>
         </div>
       </div>
-    </form>
 
-    <!-- Defina a URL em uma variável JavaScript -->
-    <script>
-      const relatoriosUrl = "{% url 'relatorios' %}";
-    </script>
+      <!-- Segunda Linha: Taxa de Urgência e Título do Projeto -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.taxa_urgencia.id_for_label }}">Taxa de Urgência Necessária</label>
+          {{ form.taxa_urgencia }} {% if form.taxa_urgencia.errors %}
+          <div class="error">{{ form.taxa_urgencia.errors }}</div>
+          {% endif %}
+        </div>
 
-    
-    <script src="{% static 'js/script.js' %}"></script>
-  </body>
+        <div class="form-group">
+          <label for="{{ form.titulo_projeto.id_for_label }}">Título do Projeto</label>
+          {{ form.titulo_projeto }} {% if form.titulo_projeto.errors %}
+          <div class="error">{{ form.titulo_projeto.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.descricao.id_for_label }}">Descrição</label>
+        {{ form.descricao }} {% if form.descricao.errors %}
+        <div class="error">{{ form.descricao.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.status.id_for_label }}">Status</label>
+        {{ form.status }} {% if form.status.errors %}
+        <div class="error">{{ form.status.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.urgencia.id_for_label }}">Urgência</label>
+        {{ form.urgencia }} {% if form.urgencia.errors %}
+        <div class="error">{{ form.urgencia.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Dentro do formulário existente -->
+      <div class="form-group">
+        <label for="{{ form.data_demanda.id_for_label }}">Data de Entrega</label>
+        {{ form.data_demanda }}
+        {% if form.data_demanda.errors %}
+        <div class="error">{{ form.data_demanda.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.arquivo_adicional.id_for_label }}">Arquivo Adicional</label>
+        {{ form.arquivo_adicional }} {% if form.arquivo_adicional.errors %}
+        <div class="error">{{ form.arquivo_adicional.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn btn-primary">Cadastrar Nova Demanda
+        </button>
+        <button type="reset" class="btn btn-danger">Resetar</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Defina a URL em uma variável JavaScript -->
+  <script>
+    const relatoriosUrl = "{% url 'relatorios' %}";
+  </script>
+
+
+  <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+
 </html>
 <!-- conteudos/relatorios.html -->

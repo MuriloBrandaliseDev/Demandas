@@ -3,205 +3,310 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Calendário de Demandas</title>
-    <style>
-      * {
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-        margin: 0;
-        padding: 0;
-      }
 
-      body {
-        margin: 0 auto;
-        background-color: #f7f7f1;
-        min-height: 100vh;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Calendário de Demandas</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
 
-      .calendario-container {
-        margin: 0 auto;
-        width: 87%;
-        margin-top: 3%;
-        margin-left: 190px;
-        border-radius: 10px;
-        
-        
-      }
+    body {
+      margin: 0 auto;
+      background-color: #f7f7f1;
+      min-height: 100vh;
+    }
 
-      .calendario-container h1 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #333;
-      }
+    .calendario-container {
+      margin: 0 auto;
+      width: 87%;
+      margin-top: 3%;
+      margin-left: 190px;
+      border-radius: 10px;
 
-      .mes {
-        margin-bottom: 40px;
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: solid 1px #e0dfdf;
-      }
 
-      .mes h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2em;
-        color: #555;
-      }
+    }
 
-      .dias {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 10px;
-      }
+    .calendario-container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
 
+    .mes {
+      margin-bottom: 40px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: solid 1px #e0dfdf;
+    }
+
+    .mes h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+      color: #555;
+    }
+
+    .dias {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .dia {
+      background-color: #f0f4f8;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: all 0.1s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dia:hover {
+      background-color: #e1e9f0;
+    }
+
+    .numero-dia {
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: right;
+      color: #333;
+    }
+
+    .demandas {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .demanda {
+      background-color: #28a745;
+      color: #fff;
+      padding: 5px 8px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      font-size: 11px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .abrir-modal {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .sem-demanda {
+      color: #999;
+      font-style: italic;
+      font-size: 12px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    /* Cabeçalhos dos dias da semana */
+    .dias-semana {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .dias-semana div {
+      text-align: center;
+      font-weight: bold;
+      color: #fff;
+      background-color: rgb(0, 194, 107);
+      padding: 8px 0;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dias-semana div:hover {
+      background-color: #12cf5a;
+    }
+
+
+
+    .modal-demandas {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+
+    }
+
+    .modal-demandas-content {
+      background: white;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 5px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-demandas-content h3 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .modal-demandas-content p {
+      margin: 5px 0;
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #212121;
+      border-bottom: 1px solid #d2d2d2;
+    }
+
+    .close-demandas-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 25px;
+      cursor: pointer;
+      color: #3c3c3c;
+    }
+
+    .close-demandas-button:hover {
+      color: #000;
+    }
+
+
+    .icon {
+      margin-right: 8px;
+    }
+
+
+    /* Responsividade */
+    @media (max-width: 1200px) {
       .dia {
-        background-color: #f0f4f8;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 10px;
-        min-height: 100px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
+        min-height: 90px;
       }
+    }
 
-      .numero-dia {
-        font-weight: bold;
-        margin-bottom: 10px;
-        text-align: right;
-        color: #333;
-      }
-
-      .demandas {
-        flex-grow: 1;
-        overflow-y: auto;
-      }
-
-      .demanda {
-        background-color: #28a745;
-        color: #fff;
-        padding: 5px 8px;
-        margin-bottom: 5px;
-        border-radius: 4px;
-        font-size: 12px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .demanda:hover {
-        background-color: #218838;
-      }
-
-      .sem-demanda {
-        color: #999;
-        font-style: italic;
-        font-size: 12px;
-        text-align: center;
-        margin-top: auto;
-      }
-
-      /* Cabeçalhos dos dias da semana */
+    @media (max-width: 768px) {
       .dias-semana {
-        display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 10px;
-        margin-bottom: 10px;
+        gap: 5px;
       }
 
       .dias-semana div {
-        text-align: center;
-        font-weight: bold;
-        color: #fff;
-        background-color: rgb(0, 194, 107);
-        padding: 8px 0;
-        border-radius: 5px;
+        font-size: 12px;
+        padding: 5px 0;
       }
 
-      /* Responsividade */
-      @media (max-width: 1200px) {
-        .dia {
-          min-height: 90px;
-        }
+      .dia {
+        min-height: 80px;
+        padding: 8px;
       }
 
-      @media (max-width: 768px) {
-        .dias-semana {
-          grid-template-columns: repeat(7, 1fr);
-          gap: 5px;
-        }
-
-        .dias-semana div {
-          font-size: 12px;
-          padding: 5px 0;
-        }
-
-        .dia {
-          min-height: 80px;
-          padding: 8px;
-        }
-
-        .demanda {
-          font-size: 11px;
-          padding: 4px 6px;
-        }
-
-        .sem-demanda {
-          font-size: 10px;
-        }
+      .demanda {
+        font-size: 11px;
+        padding: 4px 6px;
       }
 
-      @media (max-width: 480px) {
-        .mes {
-          padding: 15px;
-        }
-
-        .mes h2 {
-          font-size: 1.5em;
-        }
-
-        .dia {
-          min-height: 70px;
-        }
+      .sem-demanda {
+        font-size: 10px;
       }
-    </style>
-  </head>
-  <body>
-    <div class="calendario-container">   
-      {% for mes in meses %}
-      <div class="mes">
-        <h1>Calendário<span style="color: rgb(0, 194, 107)"> de Demandas </span>  {{ ano }}</h1>
-        <h2>{{ mes.nome }}</h2>
-        <div class="dias-semana">
-          <div>Domingo</div>
-          <div>Segunda</div>
-          <div>Terça</div>
-          <div>Quarta</div>
-          <div>Quinta</div>
-          <div>Sexta</div>
-          <div>Sábado</div>
-        </div>
-        <div class="dias">
-          {% for dia in mes.dias %}
-          <div class="dia">
-            <div class="numero-dia">{{ dia.dia }}</div>
-            <div class="demandas">
-              {% for demanda in dia.demandas %}
-              <div class="demanda" title="{{ demanda.descricao }}">
-                {{ demanda.titulo_projeto }}
-              </div>
-              {% empty %}
-              
-              {% endfor %}
+    }
+
+    @media (max-width: 480px) {
+      .mes {
+        padding: 15px;
+      }
+
+      .mes h2 {
+        font-size: 1.5em;
+      }
+
+      .dia {
+        min-height: 70px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="calendario-container">
+    {% for mes in meses %}
+    <div class="mes">
+      <h1>Calendário<span style="color: rgb(0, 194, 107)"> de Demandas </span> {{ ano }}</h1>
+      <h2>{{ mes.nome }}</h2>
+      <div class="dias-semana">
+        <div>Domingo</div>
+        <div>Segunda</div>
+        <div>Terça</div>
+        <div>Quarta</div>
+        <div>Quinta</div>
+        <div>Sexta</div>
+        <div>Sábado</div>
+      </div>
+      <div class="dias">
+        {% for dia in mes.dias %}
+        <div class="dia">
+          <div class="numero-dia">{{ dia.dia }}</div>
+          <div class="demandas">
+            {% for demanda in dia.demandas %}
+            <div class="demanda" title="{{ demanda.descricao }}" data-demanda-id="{{ demanda.id }}" class="demanda"
+              title="{{ demanda.descricao }}" data-titulo="{{ demanda.titulo_projeto }}"
+              data-descricao="{{ demanda.descricao }}" data-status="{{ demanda.get_status_display }}"
+              data-urgencia="{{ demanda.get_urgencia_display }}" data-data="{{ demanda.data_criacao|date:'d/m/Y H:i' }}"
+              data-solicitante="{{ demanda.nome_solicitante }}">
+              <a href="#" class="abrir-modal">
+                {{ demanda.titulo_projeto }} <i class="fa-solid fa-star"></i>
+              </a>
+            </div>
+            {% empty %}
+
+            {% endfor %}
+          </div>
+
+
+          <div id="demandaOverlay" class="modal-overlay hidden"></div> <!-- Fundo escuro -->
+          <div id="demandaModal" class="modal-demandas hidden">
+            <div class="modal-demandas-content">
+              <!-- Botão para fechar o modal -->
+              <span class="close-demandas-button">&times;</span>
+
+              <h3>
+                Detalhes da <span style="color: rgb(0, 194, 107)">Demanda</span>
+                <i style="margin-left: 15px; font-size: 17px" class="fa-solid fa-circle-info"></i>
+              </h3>
+
+              <!-- Informações detalhadas da demanda -->
+              <p><strong>Título:</strong> <span id="demanda-modal-titulo"></span></p>
+              <p><strong>Status:</strong> <span id="demanda-modal-status"></span></p>
+              <p><strong>Urgência:</strong> <span id="demanda-modal-urgencia"></span></p>
+              <p><strong>Data de Criação:</strong> <span id="demanda-modal-data"></span></p>
+              <p><strong>Descrição:</strong> <span id="demanda-modal-descricao"></span></p>
+              <p><strong>Solicitante:</strong> <span id="demanda-modal-solicitante"></span></p>
             </div>
           </div>
-          {% endfor %}
+
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
-  </body>
+    {% endfor %}
+  </div>
+
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
 </html>
