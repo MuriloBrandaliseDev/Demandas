@@ -20,7 +20,7 @@ body {
   top: 35%;
   font-weight: bold;
   width: 17%;
-  height: 200px;
+  height: 150px;
   font-size: 21px;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -28,6 +28,30 @@ body {
   background: linear-gradient(135deg, #28a745, #03c77f);
   color: #ffffff;
   animation: slideIn 1s forwards, slideOutUp 1s forwards 5s;
+}
+
+.btn-baixar {
+  position: absolute;
+  bottom: 60px;
+  left: 47%;
+  margin-top: 10px;
+  background-color: rgb(5, 161, 130);
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 1005;
+  transition: all 0.1s ease;
+}
+
+.btn-baixar:hover {
+  transform: translateY(-3px);
+  background-color: #006e6b;
 }
 
 @keyframes slideIn {

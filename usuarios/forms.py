@@ -12,6 +12,7 @@ class RegistroForm(UserCreationForm):
     class Meta:
         model = Usuario
         fields = ['username', 'email', 'password1', 'password2']
+        
 
     def __init__(self, *args, **kwargs):
         super(RegistroForm, self).__init__(*args, **kwargs)
@@ -46,6 +47,7 @@ class EmailOrUsernameAuthenticationForm(AuthenticationForm):
         username_or_email = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
+        # Autentica usando email ou username
         if '@' in username_or_email:
             try:
                 user = Usuario.objects.get(email=username_or_email)
@@ -59,8 +61,28 @@ class EmailOrUsernameAuthenticationForm(AuthenticationForm):
         if user is None:
             raise forms.ValidationError("Usuário ou senha inválidos.")
         
+        # Adiciona o usuário ao formulário
         self.cleaned_data['user'] = user
         return self.cleaned_data
+
+    def get_user(self):
+        return self.cleaned_data.get('user')
+    
+
+from django.contrib.auth.backends import ModelBackend
+from .models import Usuario
+
+class EmailOrUsernameBackend(ModelBackend):
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        try:
+            # Autentica com email ou username
+            user = Usuario.objects.get(email=username) if '@' in username else Usuario.objects.get(username=username)
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
+        except Usuario.DoesNotExist:
+            return None
+
+
 
 
 class DemandaForm(forms.ModelForm):

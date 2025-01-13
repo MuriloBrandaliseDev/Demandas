@@ -1,67 +1,86 @@
-{% load static %}
-{% csrf_token %}
+{% load static %} {% csrf_token %}
 
 <div id="sidebar" class="sidebar">
   <div class="logo">
-    <a href="{% url 'base' %}">
-      <img src="{% static 'usuarios/imagens/images3.png' %}" alt="Logo da Querolar" />
-    </a>
+    <img src="{% static 'usuarios/imagens/images3.png' %}" alt="Logo da Querolar" />
   </div>
   <ul>
-    <li><a href="#" class="item-sidebar" data-url="{% url 'dashboard' %}" data-id="dashboard"><span class="icone"><i class="fa-solid fa-chart-line"></i></span><span class="texto">Dashboard</span></a></li>
-    <li><a href="#" class="item-sidebar" data-url="{% url 'relatorios' %}" data-id="relatorios"><span class="icone"><i class="fa-solid fa-chart-bar"></i></span><span class="texto">Cadastrar</span></a></li>
-    <li><a href="#" class="item-sidebar" data-url="{% url 'configuracoes' %}" data-id="configuracoes"><span class="icone"><i class="fa-solid fa-gear"></i></span><span class="texto">Projetos</span></a></li>
-    <li><a href="#" class="item-sidebar" data-url="{% url 'calendario' %}" data-id="calendario"><span class="icone"><i class="fa-solid fa-calendar-days"></i></span><span class="texto">Calendário</span></a></li>
-    <li><a href="#" class="item-sidebar" data-url="{% url 'equipe' %}" data-id="equipe"><span class="icone"><i class="fa-solid fa-diagram-project"></i></span><span class="texto">Equipe</span></a></li>
-    <li><a href="#" class="item-sidebar" data-url="{% url 'historico_demandas' %}" data-id="usuarios"><span style="color: #424242;" class="icone"><i class="fa-solid fa-clock-rotate-left"></i></span><span class="texto">Histórico</span></a></li>
-    <li><a href="{% url 'login' %}" class="item-sair"><span style="color: #424242;" class="icone"><i class="fa-solid fa-door-open"></i></span><span class="texto">Sair</span></a></li>
+    <li>
+      <a href="#" class="item-sidebar" data-url="{% url 'dashboard' %}" data-id="dashboard"><span class="icone"><i
+            class="fa-solid fa-chart-line"></i></span><span class="texto">Dashboard</span></a>
+    </li>
+    <li>
+      <a href="#" class="item-sidebar" data-url="{% url 'relatorios' %}" data-id="relatorios"><span class="icone"><i
+            class="fa-solid fa-chart-bar"></i></span><span class="texto">Cadastrar</span></a>
+    </li>
+    <li>
+      <a href="#" class="item-sidebar" data-url="{% url 'configuracoes' %}" data-id="configuracoes"><span
+          class="icone"><i class="fa-solid fa-gear"></i></span><span class="texto">Projetos</span></a>
+    </li>
+    <li>
+      <a href="#" class="item-sidebar" data-url="{% url 'calendario' %}" data-id="calendario"><span class="icone"><i
+            class="fa-solid fa-calendar-days"></i></span><span class="texto">Calendário</span></a>
+    </li>
+    <li>
+      <a href="#" class="item-sidebar" data-url="{% url 'equipe' %}" data-id="equipe"><span class="icone"><i
+            class="fa-solid fa-diagram-project"></i></span><span class="texto">Equipe</span></a>
+    </li>
+    <li>
+      <a href="#" class="item-sidebar" data-url="{% url 'historico_demandas' %}" data-id="usuarios"><span
+          style="color: #424242" class="icone"><i class="fa-solid fa-clock-rotate-left"></i></span><span
+          class="texto">Histórico</span></a>
+    </li>
+    <li>
+      <a href="{% url 'login' %}" class="item-sair"><span style="color: #424242" class="icone"><i
+            class="fa-solid fa-door-open"></i></span><span class="texto">Sair</span></a>
+    </li>
   </ul>
 </div>
 
 <script>
   // Seleciona todos os links com a classe 'item-sidebar'
-  const sidebarLinks = document.querySelectorAll('.item-sidebar');
+  const sidebarLinks = document.querySelectorAll(".item-sidebar");
 
   // Verifica o link ativo armazenado no localStorage
-  const activeLink = localStorage.getItem('activeLink');
+  const activeLink = localStorage.getItem("activeLink");
 
   // Se houver um link ativo armazenado, marca-o como ativo
   if (activeLink) {
-    const activeSidebarLink = document.querySelector(`[data-id="${activeLink}"]`);
+    const activeSidebarLink = document.querySelector(
+      `[data-id="${activeLink}"]`
+    );
     if (activeSidebarLink) {
-      activeSidebarLink.classList.add('active');
+      activeSidebarLink.classList.add("active");
     }
   }
 
   // Adiciona um evento de clique a cada link
-  sidebarLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
+  sidebarLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
       e.preventDefault();
       // Remove a classe 'active' de todos os links
-      sidebarLinks.forEach(link => link.classList.remove('active'));
+      sidebarLinks.forEach((link) => link.classList.remove("active"));
 
       // Adiciona a classe 'active' apenas ao link clicado
-      this.classList.add('active');
+      this.classList.add("active");
 
       // Armazena o ID do link ativo no localStorage
-      localStorage.setItem('activeLink', this.getAttribute('data-id'));
+      localStorage.setItem("activeLink", this.getAttribute("data-id"));
 
       // Carrega o conteúdo via AJAX
-      const url = this.getAttribute('data-url');
+      const url = this.getAttribute("data-url");
       fetch(url, {
-          headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-          }
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
       })
-      .then(response => response.json())
-      .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data.html) {
-              document.querySelector('.main-content').innerHTML = data.html;
+            document.querySelector(".main-content").innerHTML = data.html;
           }
-      })
-      .catch(error => console.error('Erro ao carregar a página:', error));
+        })
+        .catch((error) => console.error("Erro ao carregar a página:", error));
     });
   });
 </script>
-
-

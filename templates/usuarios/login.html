@@ -34,33 +34,35 @@
         <div class="background-shape shape-8"></div>
         <div class="background-shape shape-9"></div>
 
-        
+
 
         <section id="login">
+
+            {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div id="login-container" class="login-container ">
                 <a href="{% url 'home' %}" class="btn-voltar"><i class="fa-solid fa-delete-left"></i></a>
                 <img src="{% static 'usuarios/imagens/images3.png' %}" alt="Descrição da Imagem">
                 <h2>Conecte-se</h2>
 
                 <!-- Exibir mensagens de erro ou sucesso -->
-                {% if messages %}
-                <div class="alert-container">
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
 
 
 
                 <form method="POST" action="{% url 'login' %}">
                     {% csrf_token %}
+
                     <div class="form-group">
                         <div class="input-icon">
                             <i class="fa-solid fa-envelope"></i>
-                            <input type="text" id="username" name="username" placeholder="E-mail ou Username" required>
+                            <input type="text" id="username" name="username" placeholder="Usuário" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -77,61 +79,73 @@
                         <a href="{% url 'registro' %}" class="registrar1">Registrar-se</a>
                     </div>
                     <a href="{% provider_login_url 'google' %}" class="btn btn-google">Entrar com Google</a>
-                    <a href="{% url 'recuperar_senha' %}" class="btn-recuperar">Esqueceu sua senha?</a>
+                    <a href="{% url 'recuperar_senha' %}" class="btn-recuperar">Esqueceu sua senha/usuário?</a>
                 </form>
-            </div>      
+            </div>
         </section>
 
-        {% if show_options %}
+        {% if user.is_authenticated and show_options %}
         <div class="modal-overlay">
             <div class="choice-modal">
                 <a href="{% url 'login' %}" class="VOLTAR"><i class="fa-solid fa-delete-left"></i></a>
                 <img src="{% static 'usuarios/imagens/paint4.png' %}" alt="Descrição da Imagem">
                 <h3>Escolha seu destino:</h3>
                 <div class="button-container">
-                    <a href="{% url 'base' %}" class="choice-button">Página Base</a>
+                    <a href="{% url 'base' %}" class="choice-button">Sistema de Demandas</a>
                     <a href="{% url 'gerador_assinaturas' %}" class="choice-button">Gerador de Assinaturas</a>
                 </div>
-            </div>    
+            </div>
         </div>
         {% endif %}
 
-        
-
-
-
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const alertElements = document.querySelectorAll('.alert');  // Seleciona todas as mensagens de alerta
+                const alertElements = document.querySelectorAll('.alert'); // Seleciona todas as mensagens de alerta
 
                 alertElements.forEach(alert => {
-                    // Defina um tempo (em milissegundos) após o qual a mensagem será escondida
+                    // Faz a mensagem aparecer suavemente
+                    alert.style.opacity = "0"; // Define a opacidade inicial como invisível
+                    alert.style.transition = "opacity 0.5s ease"; // Define a transição suave
                     setTimeout(() => {
-                        alert.style.transition = "opacity 0.5s ease";  // Adiciona uma transição suave
-                        alert.style.opacity = "0";  // Faz o alerta desaparecer
+                        alert.style.opacity = "1"; // Faz a mensagem aparecer
+                    }, 100); // Curto atraso para iniciar a animação
 
-                        // Remove o alerta do DOM após a animação de desaparecimento
+                    // Faz a mensagem desaparecer suavemente após 5 segundos
+                    setTimeout(() => {
+                        alert.style.opacity = "0"; // Faz a mensagem desaparecer suavemente
                         setTimeout(() => {
-                            alert.remove();
-                        }, 500);  // Tempo da transição (em milissegundos)
-                    }, 5000);  // Tempo que o alerta ficará visível (5 segundos, neste caso)
+                            alert.remove(); // Remove o alerta do DOM após a animação
+                        }, 500); // Aguarda o tempo da transição para remover o alerta
+                    }, 5000); // Tempo que o alerta ficará visível (5 segundos)
                 });
             });
 
 
-            document.addEventListener("DOMContentLoaded", function() {
-        const modalOverlay = document.querySelector('.modal-overlay');
-    });
+            document.addEventListener("DOMContentLoaded", function () {
+                const modalOverlay = document.querySelector('.modal-overlay');
+            });
 
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const loginContainer = document.getElementById("login-container");
-        const showOptions = "{{ show_options|yesno:'true,false' }}" === "true";
-        
-        if (showOptions) {
-            loginContainer.style.display = "none"; // Oculta o conteúdo do login
-        }
-    });
+            document.addEventListener("DOMContentLoaded", function () {
+                const loginContainer = document.getElementById("login-container");
+                const showOptions = "{{ show_options|yesno:'true,false' }}" === "true";
+
+                if (showOptions) {
+                    loginContainer.style.display = "none"; // Oculta o conteúdo do login
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const alerts = document.querySelectorAll(".alert");
+
+                alerts.forEach(alert => {
+                    setTimeout(() => {
+                        alert.style.transition = "opacity 0.5s ease"; // Animação suave
+                        alert.style.opacity = "0"; // Desaparece gradualmente
+                        setTimeout(() => alert.remove(), 500); // Remove do DOM após a animação
+                    }, 5000); // Tempo de exibição: 5 segundos
+                });
+            });
         </script>
         <script src="{% static 'js/main.js' %}"></script>
 </body>

@@ -45,7 +45,7 @@ def registro(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Conta criada com sucesso!")
-                return redirect('dashboard')  # Redireciona para o dashboard após o registro
+                return redirect('registro')  # Ou outra view válida
         else:
             # Adiciona mensagens de erro específicas
             if form.errors.get('username'):
@@ -63,23 +63,39 @@ def registro(request):
 # 2. Login de Usuário
 # ======================================================
 
+
 @csrf_protect
 def login_view(request):
     """
     View para login de usuários usando e-mail ou nome de usuário.
     """
-    show_options = request.GET.get('show_options', 'false') == 'true'
     if request.method == 'POST':
         form = EmailOrUsernameAuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            user = form.cleaned_data.get('user')
-            login(request, user)
-            return redirect('dashboard')  # Redireciona para o dashboard após o login
+            user = form.get_user()
+
+            # Certifique-se de que o usuário foi autenticado
+            if user:
+                # Define o backend explicitamente
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
+                login(request, user)
+
+                # Mostra o modal para escolha do próximo passo
+                return render(request, 'usuarios/login.html', {'form': form, 'show_options': True, 'user': user})
+            else:
+                messages.error(request, "Erro de autenticação. Usuário inválido.")
         else:
-            messages.error(request, "Formulário inválido. Verifique os campos.")
+            messages.error(request, "Usuário ou senha inválidos.")
     else:
         form = EmailOrUsernameAuthenticationForm()
+
+    # Verifica se o login com Google redirecionou aqui
+    show_options = request.GET.get('show_options', 'false') == 'true'
+
     return render(request, 'usuarios/login.html', {'form': form, 'show_options': show_options})
+
+
+
 
 # ======================================================
 # 3. Logout de Usuário
@@ -352,36 +368,37 @@ def excluir_membro(request, membro_id):
 
 logger = logging.getLogger(__name__)
 
-
 @csrf_protect
 def cadastrar_membro(request):
     if request.method == 'POST':
         try:
-            # Captura os dados enviados
             nome = request.POST.get('nome')
             email = request.POST.get('email')
             telefone = request.POST.get('telefone', '')
             cargo = request.POST.get('cargo', '')
 
-            # Validações básicas
             if not nome or not email:
                 return JsonResponse({'error': 'Nome e email são obrigatórios!'}, status=400)
 
-            # Verifica se o email já existe
             if Membro.objects.filter(email=email).exists():
                 return JsonResponse({'error': 'Email já cadastrado!'}, status=400)
 
-            # Cria e salva o novo membro
             novo_membro = Membro(nome=nome, email=email, telefone=telefone, cargo=cargo)
             novo_membro.save()
 
-            logger.info(f"Membro cadastrado: {novo_membro}")
-            return JsonResponse({'message': 'Membro cadastrado com sucesso!'}, status=201)
+            return JsonResponse({
+                'message': 'Membro cadastrado com sucesso!',
+                'membro': {
+                    'id': novo_membro.id,
+                    'nome': novo_membro.nome,
+                    'email': novo_membro.email,
+                    'telefone': novo_membro.telefone,
+                    'cargo': novo_membro.cargo,
+                }
+            }, status=201)
         except Exception as e:
-            logger.error(f"Erro ao cadastrar membro: {e}")
             return JsonResponse({'error': 'Erro ao salvar no banco de dados'}, status=500)
-    return JsonResponse({'error': 'Método não permitido'}, status=405)    
-    
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
 @csrf_protect
@@ -594,4 +611,23 @@ def assinatura_gerada(request):
 
 # ======================================================
 
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+
+
+def enviar_email_redefinicao(request, user):
+    current_site = get_current_site(request)
+    subject = 'Redefinição de Senha'
+    message = render_to_string('usuarios/password_reset_email.html', {
+        'user': user,
+        'domain': current_site.domain,  # Domínio correto
+        'protocol': 'http' if settings.DEBUG else 'https',  # HTTP para desenvolvimento, HTTPS para produção
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': default_token_generator.make_token(user),
+    })
+    user.email_user(subject, message)
 

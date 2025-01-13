@@ -1,177 +1,118 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Gerar Assinatura</title>
-    {% load static %}
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'usuarios/css/gerador_assinaturas.css' %}"
-    />
-  </head>
 
-  <body>
-    <div class="welcome-message" id="welcome-message">
-      <p>
-        Bem vindo ao gerador de assinaturas<span style="color: #ffffff">
-          Querolar! </span
-        ><i class="fa-solid fa-wand-magic-sparkles"></i>
-      </p>
+<head>
+  <title>Gerar Assinatura</title>
+  {% load static %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'usuarios/css/gerador_assinaturas.css' %}" />
+</head>
+
+<body>
+  <div class="welcome-message" id="welcome-message">
+    <p>
+      Bem vindo ao gerador de assinaturas<span style="color: #ffffff">
+        Querolar! </span><i class="fa-solid fa-wand-magic-sparkles"></i>
+    </p>
+  </div>
+
+  <div class="form-wrapper">
+    <div class="titulo">
+      <h1>Quero<span style="color: aquamarine;">lar</span></h1>
     </div>
-
-    <div class="form-wrapper">
-      <div class="titulo">
-        <h1>Quero<span style="color: aquamarine;">lar</span></h1>
-      </div>
-      <div class="form-container">
-        <a href="{% url 'login' %}" class="VOLTAR">
-          <i class="fa-solid fa-delete-left"></i>
-        </a>
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          <!-- Renderize cada campo manualmente -->
-          {% for field in form %}
-          <div class="form-group">
-            <!-- Personalize o label sem os dois pontos -->
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }} {{ field.errors }}
-          </div>
-          {% endfor %}
-          <button type="submit">Gerar Assinatura/Editar</button>
-        </form>
-      </div>
-    </div>
-
-    {% if signature %}
-    <div class="assinatura-gerada">
-      <div class="assinatura-header">
-        {% if signature.profile_image %}
-        <img src="{{ signature.profile_image }}" alt="Imagem de Perfil" />
-        {% endif %}
-      </div>
-      <div class="assinatura-detalhes" id="assinatura-conteudo">
-        <!-- Nome e Cargo -->
-        <p class="assinatura-nome"><strong>{{ signature.name }}</strong></p>
-        <p class="assinatura-cargo">
-          {{ signature.title }} | {{ signature.department }}
-        </p>
-        <!-- Email, Telefone e Website -->
-        <p>
-          <strong class="email">Email:</strong>
-          <a href="mailto:{{ signature.email }}">{{ signature.email }}</a>
-        </p>
-        <p><strong class="phone">Phone:</strong> {{ signature.phone }}</p>
-        <p>
-          <strong class="website">Website:</strong>
-          <a href="{{ signature.website }}" target="_blank"
-            >{{ signature.website }}</a
-          >
-        </p>
-      </div>
-    </div>
-    {% endif %}
-    <button id="copiar-assinatura" class="btn-copiar">Copiar assinatura <i class="fa-regular fa-copy"></i></button>
-
-    <div class="email-container">
-      <div class="email-header">
-        <div class="browser-controls">
-          <span class="red"></span>
-          <span class="yellow"></span>
-          <span class="green"></span>
+    <div class="form-container">
+      <a href="{% url 'login' %}" class="VOLTAR">
+        <i class="fa-solid fa-delete-left"></i>
+      </a>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Renderize cada campo manualmente -->
+        {% for field in form %}
+        <div class="form-group">
+          <!-- Personalize o label sem os dois pontos -->
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }} {{ field.errors }}
         </div>
-      </div>
-      <div class="email-body">
-        <p><strong>Para:</strong> Seu destinatário</p>
-        <p><strong>Assunto:</strong> Veja minha nova assinatura de e-mail</p>
-        <hr class="divider" />
+        {% endfor %}
+        <button type="submit">Gerar Assinatura/Editar</button>
+      </form>
+    </div>
+  </div>
+
+  {% if signature %}
+  <div class="assinatura-gerada" id="assinatura-gerada">
+    <div class="assinatura-header">
+      {% if signature.profile_image %}
+      <img src="{{ signature.profile_image }}" alt="Imagem de Perfil">
+      {% endif %}
+    </div>
+    <div class="assinatura-detalhes">
+      <p><strong>{{ signature.name }}</strong></p>
+      <p>{{ signature.title }} | {{ signature.department }}</p>
+      <p><strong>Email:</strong> <a href="mailto:{{ signature.email }}">{{ signature.email }}</a></p>
+      <p><strong>Phone:</strong> {{ signature.phone }}</p>
+      <p><strong>Website:</strong> <a href="{{ signature.website }}">{{ signature.website }}</a></p>
+    </div>
+  </div>
+  <button id="baixar-assinatura" class="btn-baixar">Baixar Assinatura <i class="fa-solid fa-download"></i></button>
+  {% endif %}
+
+  <div class="email-container">
+    <div class="email-header">
+      <div class="browser-controls">
+        <span class="red"></span>
+        <span class="yellow"></span>
+        <span class="green"></span>
       </div>
     </div>
+    <div class="email-body">
+      <p><strong>Para:</strong> Seu destinatário</p>
+      <p><strong>Assunto:</strong> Veja minha nova assinatura de e-mail</p>
+      <hr class="divider" />
+    </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Verifica no localStorage se a mensagem já foi exibida
-        if (!localStorage.getItem("welcomeMessageShown")) {
-          // Mostra a mensagem
-          const welcomeMessage = document.getElementById("welcome-message");
-          if (welcomeMessage) {
-            welcomeMessage.style.display = "block";
-            setTimeout(function () {
-              welcomeMessage.style.display = "none";
-              // Armazena no localStorage que a mensagem foi exibida
-              localStorage.setItem("welcomeMessageShown", "true");
-            }, 6000); // 6 segundos (1s para entrar + 5s de exibição)
-          }
-        } else {
-          // Esconde a mensagem caso já tenha sido exibida antes
-          const welcomeMessage = document.getElementById("welcome-message");
-          if (welcomeMessage) {
-            welcomeMessage.style.display = "none";
-          }
-        }
-
-        // Função para copiar a assinatura
-        const copiarBotao = document.getElementById("copiar-assinatura");
-        const assinaturaConteudo = document.getElementById(
-          "assinatura-conteudo"
-        );
-
-        if (copiarBotao) {
-          copiarBotao.addEventListener("click", function () {
-            // Cria o HTML completo com estilos inline
-            const assinaturaHTML = `
-      <div style="display: flex; align-items: center; font-family: Poppins, Arial, sans-serif; padding: 10px; max-width: 600px;">
-        <div style="margin-right: 15px;">
-          <img src="{{ signature.profile_image }}" alt="Imagem de Perfil" style="width: 120px; height: 120px; border-radius: 50%; border: 2px solid #ddd;">
-        </div>
-        <div>
-          <p style="margin: 0; font-size: 18px; font-weight: bold; color: #333;">{{ signature.name }}</p>
-          <p style="margin: 5px 0; font-size: 16px; color: #555;">{{ signature.title }} | {{ signature.department }}</p>
-          <p style="margin: 5px 0; font-size: 14px; color: #333;"><strong>Email:</strong> <a href="mailto:{{ signature.email }}" style="color: #007bff; text-decoration: none;">{{ signature.email }}</a></p>
-          <p style="margin: 5px 0; font-size: 14px; color: #333;"><strong>Phone:</strong> {{ signature.phone }}</p>
-          <p style="margin: 5px 0; font-size: 14px; color: #333;"><strong>Website:</strong> <a href="{{ signature.website }}" style="color: #007bff; text-decoration: none;">{{ signature.website }}</a></p>
-        </div>
-      </div>
-      `;
-
-            // Copia o HTML completo para a área de transferência
-            navigator.clipboard
-              .write([
-                new ClipboardItem({
-                  "text/html": new Blob([assinaturaHTML], {
-                    type: "text/html",
-                  }),
-                }),
-              ])
-              .then(() => {
-                exibirMensagem("Assinatura copiada com sucesso!", "sucesso");
-              })
-              .catch((err) => {
-                exibirMensagem("Erro ao copiar a assinatura: " + err, "erro");
-              });
-          });
-        }
-
-        // Função para exibir mensagens dinâmicas
-        function exibirMensagem(mensagem, tipo) {
-          const mensagemDiv = document.createElement("div");
-          mensagemDiv.textContent = mensagem;
-          mensagemDiv.className =
-            tipo === "sucesso" ? "mensagem-sucesso" : "mensagem-erro";
-          document.body.appendChild(mensagemDiv);
-
-          // Remove a mensagem após 5 segundos
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Gerenciar mensagem de boas-vindas
+      const welcomeMessage = document.getElementById("welcome-message");
+      if (welcomeMessage) {
+        // Verifica no sessionStorage se a mensagem já foi exibida para esta página
+        const pageVisited = sessionStorage.getItem("pageVisited");
+        if (!pageVisited || pageVisited !== "geradorAssinaturas") {
+          // Exibe a mensagem de boas-vindas
+          welcomeMessage.style.display = "block";
           setTimeout(() => {
-            mensagemDiv.remove();
-          }, 5000);
+            welcomeMessage.style.display = "none";
+            // Define que esta página foi visitada
+            sessionStorage.setItem("pageVisited", "geradorAssinaturas");
+          }, 6000); // Exibe por 6 segundos
+        } else {
+          // Esconde a mensagem se já foi exibida anteriormente
+          welcomeMessage.style.display = "none";
         }
-      });
-    </script>
-  </body>
+      }
+
+      // Função para baixar a assinatura como imagem
+      const baixarBotao = document.getElementById("baixar-assinatura");
+      const assinaturaGerada = document.getElementById("assinatura-gerada");
+
+      if (baixarBotao && assinaturaGerada) {
+        baixarBotao.addEventListener("click", function () {
+          html2canvas(assinaturaGerada).then((canvas) => {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "assinatura.png";
+            link.click();
+          });
+        });
+      }
+    });
+  </script>
+
+
+</body>
+
 </html>

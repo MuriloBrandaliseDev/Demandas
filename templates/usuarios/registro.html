@@ -30,28 +30,42 @@
             {% if messages %}
             <div class="message-block">
                 {% for message in messages %}
-                    <p class="message-text">{{ message }}</p>
+                <p class="message-text message-{{ message.tags }}">{{ message }}</p>
                 {% endfor %}
             </div>
             <!-- Esconde a mensagem após 5 segundos -->
             <script>
-                setTimeout(function() {
+                document.addEventListener("DOMContentLoaded", function () {
                     const messageBlock = document.querySelector('.message-block');
+
                     if (messageBlock) {
-                        messageBlock.style.display = 'none';
+                        // Faz a mensagem aparecer suavemente
+                        messageBlock.style.opacity = "0"; // Define inicialmente transparente
+                        messageBlock.style.transition = "opacity 0.5s ease"; // Transição suave
+                        setTimeout(() => {
+                            messageBlock.style.opacity = "1"; // Gradualmente aparece
+                        }, 100); // Delay curto para aplicar a transição
+
+                        // Faz a mensagem desaparecer suavemente após 5 segundos
+                        setTimeout(() => {
+                            messageBlock.style.opacity = "0"; // Gradualmente desaparece
+                            setTimeout(() => {
+                                messageBlock.style.display = "none"; // Remove do layout após a transição
+                            }, 500); // Tempo para a transição completar
+                        }, 5000); // Aguarda 5 segundos antes de desaparecer
                     }
-                }, 5000); // Esconde após 5 segundos
+                });
             </script>
-        {% endif %}
-        
-        {% if success %}
+            {% endif %}
+
+            {% if success %}
             <script>
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location.href = "{% url 'login' %}";
                 }, 5000); // Redireciona após 5 segundos
             </script>
-        {% endif %}
-        
+            {% endif %}
+
 
             <form method="POST">
                 {% csrf_token %}
@@ -125,6 +139,10 @@
             this.querySelector("i").classList.toggle("fa-eye");
             this.querySelector("i").classList.toggle("fa-eye-slash");
         });
+
+
+
+        
     </script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>

@@ -863,6 +863,53 @@ function initActionButtons() {
   });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  const themeToggle = document.getElementById("theme-toggle");
+  const currentTheme = localStorage.getItem("global-theme") || "light"; // Tema padrão
+
+  // Aplica o tema salvo no armazenamento local
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  updateThemeIcon(currentTheme);
+
+  // Atualiza o tema ao clicar no botão de alternância
+  themeToggle.addEventListener("click", function () {
+    const newTheme = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+
+    // Aplica o tema e salva no localStorage
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("global-theme", newTheme);
+
+    // Atualiza o ícone do botão
+    updateThemeIcon(newTheme);
+  });
+
+  // Atualiza o ícone do botão
+  function updateThemeIcon(theme) {
+    const icon = themeToggle.querySelector("i");
+    if (theme === "dark") {
+      icon.classList.remove("fa-moon");
+      icon.classList.add("fa-sun");
+    } else {
+      icon.classList.remove("fa-sun");
+      icon.classList.add("fa-moon");
+    }
+  }
+
+  // Aplica o tema ao conteúdo carregado dinamicamente via AJAX
+  document.addEventListener("ajaxComplete", function () {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const dynamicContent = document.getElementById("dynamic-content");
+
+    if (currentTheme === "dark") {
+      dynamicContent.classList.add("dark-theme");
+    } else {
+      dynamicContent.classList.remove("dark-theme");
+    }
+  });
+});
+
+
+
 // ======================================================
 // 6. Funções do Modal de Sucesso
 // ======================================================
@@ -1049,6 +1096,38 @@ function initExcluirSelecionados() {
     }
   });
 }
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const welcomeMessage = document.getElementById("welcome-message");
+  const conteudoPrincipal = document.getElementById("conteudo-principal");
+  const sidebarItems = document.querySelectorAll(".item-sidebar");
+
+  if (welcomeMessage && conteudoPrincipal) {
+    // Exibe a mensagem se o conteúdo principal estiver vazio
+    if (conteudoPrincipal.innerHTML.trim() === "") {
+      welcomeMessage.classList.add("show");
+      welcomeMessage.classList.remove("hidden");
+    }
+
+    // Oculta a mensagem ao clicar nos itens da sidebar
+    sidebarItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        welcomeMessage.classList.remove("show");
+        setTimeout(() => welcomeMessage.classList.add("hidden"), 500); // Aguarda a animação antes de ocultar
+      });
+    });
+
+    // Oculta a mensagem ao carregar conteúdo via AJAX
+    conteudoPrincipal.addEventListener("DOMNodeInserted", function () {
+      welcomeMessage.classList.remove("show");
+      setTimeout(() => welcomeMessage.classList.add("hidden"), 500); // Aguarda a animação antes de ocultar
+    });
+  }
+});
+
+
 
 // ======================================================
 // 9. Funções para Selecionar Todos os Checkboxes

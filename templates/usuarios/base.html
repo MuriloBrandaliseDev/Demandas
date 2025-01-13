@@ -29,11 +29,16 @@
     <div class="container">
       <!-- Sidebar -->
       {% include 'usuarios/sidebar.html' %}
-
+      <div id="welcome-message" class="welcome-message hidden">
+        <h1>BEM-VINDO AO SISTEMA DE <span style="color: rgb(0, 194, 107)">DEMANDAS QUEROLAR!</span> </h1>
+        <p><i class="fa-solid fa-arrow-left"></i> Selecione uma opção no menu ao lado para começar.</p>
+      </div>
+      
       <!-- Conteúdo Principal -->
       <main id="conteudo-principal">{% block content %}{% endblock %}</main>
     </div>
 
+    
     <!-- Contêiner de Notificação -->
     <div id="notification" class="notification"></div>
 

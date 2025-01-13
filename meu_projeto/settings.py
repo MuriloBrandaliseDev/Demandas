@@ -121,6 +121,7 @@ EMAIL_HOST_USER = 'murilobrandalise98@gmail.com'
 EMAIL_HOST_PASSWORD = 'qqzx ubwj haly khil'
 DEFAULT_FROM_EMAIL = 'murilobrandalise98@gmail.com'
 
+
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 

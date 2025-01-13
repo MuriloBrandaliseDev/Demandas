@@ -71,19 +71,69 @@ body {
 
 /* Estilização do bloco de mensagem */
 .message-block {
-    background-color: #d4edda; /* Fundo verde claro para sucesso */
-    border-left: 6px solid #28a745; /* Borda verde */
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+    opacity: 0; /* Inicialmente invisível */
+    transition: opacity 0.5s ease; /* Transição suave */
+    position: fixed; /* Fixa no topo da página */
+    top: 10px; /* Ajusta a posição */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Corrige o deslocamento para centralizar */
+    color: white; /* Cor do texto */
+    padding: 10px 20px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    z-index: 1000; /* Fica acima de outros elementos */
+    text-align: center; /* Centraliza o texto */
 }
 
-/* Estilo do texto da mensagem */
 .message-text {
-    color: #155724; /* Texto verde para sucesso */
+    padding: 10px 20px;
+    border-radius: 5px;
     margin: 0;
-    font-size: 0.95rem;
+    text-align: center;
 }
+
+
+/* Mensagens de sucesso */
+.message-success {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border: 1px solid #388E3C;
+}
+
+/* Mensagens de erro */
+.message-error {
+    background-color: #f44336; /* Vermelho */
+    color: white;
+    border: 1px solid #d32f2f;
+}
+
+/* Mensagens de aviso */
+.message-warning {
+    background-color: #FF9800; /* Laranja */
+    color: white;
+    border: 1px solid #F57C00;
+}
+
+/* Mensagens informativas */
+.message-info {
+    background-color: #2196F3; /* Azul */
+    color: white;
+    border: 1px solid #1976D2;
+}
+
+
+
+.is-invalid {
+    border-color: #dc3545; /* Vermelho para indicar erro */
+    background-color: #f8d7da; /* Fundo claro para erro */
+}
+
+.feedback {
+    font-size: 0.9em;
+    color: #dc3545; /* Cor do texto de erro */
+    margin-top: 5px;
+}
+
+
 
 form {
     padding: 0% 5%;
@@ -141,7 +191,7 @@ input[type="password"] {
     margin-top: 0.5rem;
     padding-right: 40px; /* Espaço para o ícone do olho */
     border: 1px solid #1e5425;
-    border-radius: 30px;
+    border-radius: 5px;
     font-size: 1rem;
 }
 

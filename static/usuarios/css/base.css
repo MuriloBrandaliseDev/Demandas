@@ -103,6 +103,7 @@ main {
 
  /* Estilos para o bloco de cadastro */
  .overlay {
+  display: none; /* Escondido inicialmente */
     position: fixed;
     top: 0;
     left: 0;
@@ -210,6 +211,156 @@ main {
     margin-left: 8px;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Tema Claro (Padrão) */
+.sidebar {
+  background-color: var(--sidebar-bg-light, #545454);
+  color: var(--sidebar-text-light, #d0d0d0);
+}
+
+/* Tema Escuro */
+[data-theme="dark"] .sidebar {
+  background-color: var(--sidebar-bg-dark, #121212);
+  color: var(--sidebar-text-dark, #ffffff);
+}
+
+
+/* Mantém o destaque do item selecionado no tema escuro */
+[data-theme="dark"] .sidebar .item-sidebar.active {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* Ajustando os ícones no tema escuro */
+[data-theme="dark"] .sidebar .item-sidebar .icone {
+  color: #ffffff; /* Azul claro no tema escuro */
+}
+
+
+
+/* Tema Claro (Padrão) */
+.navbar {
+  background-color: var(--navbar-bg-light, #ffffff);
+  color: var(--navbar-text-light, #000000);
+}
+
+/* Tema Escuro */
+[data-theme="dark"] .navbar {
+  background-color: var(--navbar-bg-dark, #121212);
+  color: var(--navbar-text-dark, #ffffff);
+}
+
+/* Ajustando os botões e ícones no tema escuro */
+[data-theme="dark"] .navbar-icons a,
+[data-theme="dark"] .navbar-icons button {
+  color: #ffffff;
+}
+
+/* Efeito hover no tema escuro */
+[data-theme="dark"] .navbar-icons a:hover,
+[data-theme="dark"] .navbar-icons button:hover {
+  color: #1e90ff; /* Azul claro */
+}
+
+
+/* Estilo do container principal onde as páginas são carregadas */
+.main-content {
+  background-color: var(--content-bg-light, #f7f7f1); /* Fundo claro padrão */
+  color: var(--content-text-light, #000000); /* Texto claro padrão */
+  transition: background-color 0.3s, color 0.3s; /* Transições suaves */
+}
+
+/* Tema Escuro */
+[data-theme="dark"] .main-content {
+  background-color: var(--content-bg-dark, #121212); /* Fundo escuro */
+  color: var(--content-text-dark, #ffffff); /* Texto claro */
+}
+
+
+
+
+
+
+
+.welcome-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px 40px;
+  text-align: center;
+  margin-left: 25px;
+  line-height: 1.1;
+  max-width: 1000px;
+  z-index: 100;
+  opacity: 0;
+  transform: translate(-50%, -120%);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.welcome-message::after{
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: 20px;
+  width: 300px;
+  height: 300px;
+  background-color: #ffffff;
+  transform: rotate(45deg);
+  box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+.welcome-message::before{
+  content: '';
+  position: absolute;
+  top: 130px;
+  left: -40px;
+  width: 150px;
+  height: 150px;
+  background-color: #ffffff;
+  transform: rotate(45deg);
+  box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.3);
+  z-index: -100;
+}
+
+
+.welcome-message h1 {
+  font-size: 3rem;
+  color: #2e2e2e;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-message p {
+  font-size: 18px;
+  color: #555;
+}
+
+
+.welcome-message.show {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.hidden {
+  display: none !important;
+}
 
 
 
