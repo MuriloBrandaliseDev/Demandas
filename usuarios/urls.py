@@ -31,6 +31,8 @@ urlpatterns = [
     
     
     
+    
+    
     # URLs para a recuperação de senha usando auth_views do Django
     path('recuperar-senha/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('recuperar-senha-enviada/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),

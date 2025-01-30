@@ -1,68 +1,207 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download de PDF</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Dashboard</title>
     <style>
-        /* Estilo do link de download */
+        * {
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+      body {
+        margin: 0 auto;
+        background-color: #f7f7f1;
+        min-height: 100vh;
+      }
 
-        *{
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
+        /* 📌 Centraliza tudo dentro da .container */
+        .container {
+            
+            max-width: 1100px;
+            margin: 18px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-left: 180px;
+        }
+
+        /* 📌 Título do Dashboard */
+        .dashboard-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 📌 Cards ficam lado a lado (4 por linha) */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            width: 1000px;
+            justify-content: center;
+        }
+
+        /* 📌 Estilização dos Cards */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .card .value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #27ae60;
+        }
+
+        /* 📌 Estilização do Gráfico */
+        .chart-container {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: scale(1.02);
+        }
+
+        /* 📌 Estilização da Lista de Demandas Recentes */
+        .recent-demandas {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .recent-demandas h2{
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .recent-demandas:hover {
+            transform: scale(1.02);
+        }
+
+        /* 📌 Lista de Demandas */
+        .recent-demandas ul {
+            list-style: none;
             padding: 0;
         }
-        
-        .body{
-            background-color: #f7f7f1;
-          
-            height: 100vh;
-        }
 
-        .download-link {
-            margin: 0  auto;
+        .recent-demandas li {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
             display: flex;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 20%;
-            justify-content: center;
             align-items: center;
-            width: 20%;
-            margin-left: 40%;
-            padding: 25px 20px;
-            background-color: #e74c3c; /* Cor de fundo vermelho */
-            color: #fff; /* Cor do texto */
-            text-decoration: none;
-            border-radius: 5px;
-            box-shadow: 0 10px 10px rgba(5 , 5, 5, 0.6);
-            font-size: 16px;
-            transition: transform 0.3s , background-color 0.3s ease; /* Efeito de transição */
-
+            gap: 10px;
+            font-size: 14px;
         }
 
-        .download-link:hover {
-            transform: translateY(-5px); /* Move o item para a direita */
-            background-color: #bf2b1b; /* Cor de fundo vermelho */
+        .recent-demandas li:last-child {
+            border-bottom: none;
         }
 
-        /* Ícone e espaçamento */
-        .download-link i {
-            margin-right: 8px; /* Espaço entre o ícone e o texto */
-            font-size: 18px;
+        /* 📌 Indicadores de Status */
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
         }
 
-        /* Efeito de hover */
+        .novo {
+            background-color: blue;
+        }
+
+        .em_andamento {
+            background-color: orange;
+        }
+
+        .concluido {
+            background-color: green;
+        }
+
+        .excluido {
+            background-color: red;
+        }
     </style>
 </head>
+
 <body>
 
-    <!-- Link para baixar o PDF -->
-    <a href="caminho_do_arquivo.pdf" class="download-link" download>
-        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
-    </a>
 
+    <div class="container">
+        <!-- Título -->
+        <h1 class="dashboard-title"> Dashboard</h1>
+
+        <!-- Contadores -->
+        <div class="dashboard-container">
+            <div class="card">
+                <h2>Total de Demandas</h2>
+                <div class="value">{{ total_demandas }}</div>
+            </div>
+            <div class="card">
+                <h2>Demandas no Mês</h2>
+                <div class="value">{{ demandas_no_mes }}</div>
+            </div>
+            <div class="card">
+                <h2>Demandas Concluídas</h2>
+                <div class="value">{{ demandas_concluidas_mes }}</div>
+            </div>
+            <div class="card">
+                <h2>Demandas Excluídas</h2>
+                <div class="value">{{ demandas_excluidas_mes }}</div>
+            </div>
+            <div class="card">
+                <h2>Membros Cadastrados</h2>
+                <div class="value">{{ total_membros }}</div>
+            </div>
+        </div>
+
+        <div class="recent-demandas">
+            <h2>📝 Demandas Recentes</h2>
+            <ul>
+                {% for demanda in demandas_recentes %}
+                <li>
+                    <span class="status-indicator {{ demanda.status }}"></span>
+                    {{ demanda.titulo_projeto }} - {{ demanda.get_status_display }} - {{ demanda.data_demanda|date:"d/m/Y" }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>    
 </body>
+
 </html>

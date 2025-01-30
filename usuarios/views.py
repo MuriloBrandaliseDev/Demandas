@@ -113,15 +113,71 @@ def logout_view(request):
 # 4. Dashboard (AJAX)
 # ======================================================
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.utils.timezone import now
+from datetime import timedelta
+from .models import Demanda, Usuario, Membro
+
 def dashboard(request):
     """
-    View para exibir o dashboard via AJAX.
+    View para exibir estatísticas do dashboard.
     """
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('conteudos/dashboard.html', request=request)
-        return JsonResponse({'html': html})
-    else:
-        return render(request, 'base.html')
+    hoje = now().date()
+    primeiro_dia_mes = hoje.replace(day=1)
+
+    # 📊 Contadores principais
+    total_demandas = Demanda.objects.exclude(status="concluido").exclude(visivel=False).count()
+    total_usuarios = Usuario.objects.count()
+    total_membros = Membro.objects.count()
+
+    # 📌 Demandas do mês atual
+    demandas_no_mes = Demanda.objects.filter(data_criacao__gte=primeiro_dia_mes).count()
+    demandas_concluidas_mes = Demanda.objects.filter(status="concluido", data_criacao__gte=primeiro_dia_mes).count()
+    demandas_excluidas_mes = Demanda.objects.filter(status="excluido", data_criacao__gte=primeiro_dia_mes).count()
+
+    # 📌 Demandas por Status
+    status_demandas = {
+        "Novo": Demanda.objects.filter(status="novo").count(),
+        "Em Andamento": Demanda.objects.filter(status="em_andamento").count(),
+        "Concluído": Demanda.objects.filter(status="concluido").count(),
+        "Excluído": Demanda.objects.filter(status="excluido").count(),
+    }
+
+    # 📌 Demandas Recentes (Últimas 5)
+    demandas_recentes = Demanda.objects.order_by('-data_criacao')[:5]
+
+    # 📊 Estrutura de dados para o gráfico (últimos 6 meses)
+    estatisticas_mensais = []
+    for i in range(6, 0, -1):
+        mes_referencia = hoje - timedelta(days=i * 30)
+        mes_numero = mes_referencia.month
+        ano = mes_referencia.year
+        nome_mes = calendar.month_abbr[mes_numero]  # Exemplo: Jan, Feb...
+
+        total = Demanda.objects.filter(data_criacao__year=ano, data_criacao__month=mes_numero).count()
+        estatisticas_mensais.append({"mes": f"{nome_mes}/{ano}", "total": total})
+
+    # 📌 Enviar os dados para o template (AJAX ou render padrão)
+    context = {
+        "total_demandas": total_demandas,
+        "total_usuarios": total_usuarios,
+        "total_membros": total_membros,
+        "demandas_no_mes": demandas_no_mes,
+        "demandas_concluidas_mes": demandas_concluidas_mes,
+        "demandas_excluidas_mes": demandas_excluidas_mes,
+        "status_demandas": status_demandas,
+        "demandas_recentes": demandas_recentes,
+        "estatisticas_mensais": estatisticas_mensais,
+    }
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        html = render_to_string("conteudos/dashboard.html", context, request=request)
+        return JsonResponse({"html": html, "estatisticas_mensais": estatisticas_mensais})
+
+    return render(request, "dashboard.html", context)
+
     
 
 # usuarios/views.py
@@ -375,8 +431,8 @@ def excluir_membro(request, membro_id):
     if request.method == 'POST':
         try:
             membro = Membro.objects.get(id=membro_id)
-            membro.ativo = False  # Marca o membro como inativo
-            membro.save()
+            membro.ativo = True  # Marca o membro como inativo
+            membro.delete()  # Remove do banco permanentemente
             logger.info(f"Membro inativado: {membro}")
             return JsonResponse({'success': True, 'message': 'Membro excluído com sucesso!'}, status=200)
         except Membro.DoesNotExist:
