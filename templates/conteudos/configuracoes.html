@@ -496,7 +496,7 @@
                   <strong><i class="fa-solid fa-spinner"></i></strong> {{ demanda.get_status_display }}
                 </p>
                 <p class="demanda-data">
-                  <strong><i class="fa-solid fa-calendar-days"></i></strong> {{ demanda.data_criacao|date:"d/m/Y H:i" }}
+                  <strong><i class="fa-solid fa-calendar-days"></i></strong> {{ demanda.data_demanda|date:"d/m/Y" }}
                 </p>
               </div>
 
@@ -517,7 +517,8 @@
               <p class="demanda-urgencia"><strong>Urgência:</strong> {{ demanda.get_urgencia_display }}</p>
               <p class="demanda-taxa_urgencia"><strong>Taxa de Urgência:</strong> {{ demanda.taxa_urgencia|yesno:"Sim,Não" }}</p>
               <p class="demanda-criacao"><strong>Criado em:</strong> {{ demanda.data_criacao|date:"d/m/Y H:i" }}</p>
-
+              <p class="demanda-data_demanda"><strong>Data da Demanda:</strong> {{ demanda.data_demanda|date:"d/m/Y" }}</p>
+              
               <!-- Verifica se há arquivo adicional -->
               {% if demanda.arquivo_adicional %}
                 <p class="demanda-arquivo">
@@ -611,11 +612,11 @@
       <div class="modal-content">
         <span class="close-button"></span>
         <h2>Editar <span style="color: rgb(0, 194, 107)">Demanda</span></h2>
-
+    
         <form id="editForm" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           <input type="hidden" id="edit-demanda-id" name="demanda_id" />
-
+    
           <div>
             <label for="edit-titulo_projeto"
               >Projeto <i class="fa-solid fa-diagram-project"></i
@@ -627,7 +628,7 @@
               required
             />
           </div>
-
+    
           <div>
             <label for="edit-nome_solicitante"
               >Nome do Solicitante <i class="fa-solid fa-user"></i
@@ -639,21 +640,21 @@
               required
             />
           </div>
-
+    
           <div>
             <label for="edit-categoria"
               >Categoria <i class="fa-solid fa-layer-group"></i
             ></label>
             <input type="text" id="edit-categoria" name="categoria" required />
           </div>
-
+    
           <div>
             <label for="edit-descricao"
               >Descrição <i class="fa-solid fa-note-sticky"></i
             ></label>
             <textarea id="edit-descricao" name="descricao" required></textarea>
           </div>
-
+    
           <div>
             <label for="edit-status"
               >Status <i class="fa-regular fa-circle-check"></i
@@ -664,7 +665,7 @@
               <option value="concluido">Concluído</option>
             </select>
           </div>
-
+    
           <div>
             <label for="edit-urgencia"
               >Urgência <i class="fa-solid fa-biohazard"></i
@@ -675,7 +676,19 @@
               <option value="alta">Alta</option>
             </select>
           </div>
-
+    
+          <div>
+  <label for="edit-data_demanda">
+    Data da Demanda <i class="fa-solid fa-calendar-day"></i>
+  </label>
+  <input
+    type="date"
+    id="edit-data_demanda"
+    name="data_demanda"
+    required
+  />
+</div>
+    
           <div>
             <label for="edit-arquivo_adicional"
               >Adicionar Arquivos <i class="fa-solid fa-paperclip"></i
@@ -687,12 +700,12 @@
               multiple
             />
           </div>
-
+    
           <div>
             <button type="submit" class="btn-confirm">Salvar</button>
             <button type="button" class="btn-cancel">Cancelar</button>
           </div>
-
+    
           <div id="edit-feedback"></div>
         </form>
       </div>

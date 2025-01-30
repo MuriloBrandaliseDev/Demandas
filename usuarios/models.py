@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
+
 
 class Usuario(AbstractUser):
     """
@@ -75,6 +77,9 @@ def save_profile(sender, instance, **kwargs):
 from django.db import models
 from datetime import datetime
 
+from django.db import models
+from datetime import datetime, date  # Assegure-se de importar date
+
 class Demanda(models.Model):
     STATUS_CHOICES = [
         ('novo', 'Novo'),
@@ -108,13 +113,12 @@ class Demanda(models.Model):
         verbose_name="Urgência"
     )
     data_criacao = models.DateTimeField(
-        auto_now_add=True, 
-        verbose_name="Data de Criação", 
-        editable=False
+        verbose_name="Data de Criação",
+        default=timezone.now  # Atualizado para permitir edição
     )
     data_demanda = models.DateField(
         verbose_name="Data da Demanda",
-        default=datetime.now
+        default=timezone.now  # Atualizado para usar timezone.now
     )
     nome_solicitante = models.CharField(
         max_length=255, 
@@ -153,6 +157,9 @@ class Demanda(models.Model):
         if not self.data_demanda:
             self.data_demanda = self.data_criacao.date()
         super().save(*args, **kwargs)
+     
+
+     
 
 
 

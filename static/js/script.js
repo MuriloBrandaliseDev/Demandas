@@ -215,18 +215,6 @@ function getCookie(name) {
  * @param {string} message - Mensagem a ser exibida.
  * @param {string} type - Tipo da notificação ('success' ou 'error').
  */
-function showNotification(message, type) {
-  const notification = document.getElementById("notification");
-  notification.textContent = message;
-  notification.className = ""; // Remove classes anteriores
-  notification.classList.add(type, "show"); // Adiciona a classe de tipo e 'show'
-
-  // Remove a notificação após 3 segundos
-  setTimeout(() => {
-    notification.classList.remove("show");
-  }, 3000);
-}
-
 /**
  * Conclui uma demanda.
  * @param {HTMLElement} button - Botão clicado para concluir a demanda.
@@ -807,12 +795,15 @@ function initSidebarEvents() {
           initEditFormEvent(); // Reaplica a funcionalidade de edição
           initVerMaisModal(); // Reaplica a funcionalidade "Ver Mais"
           initDeletarDemandas(); // Reaplica a funcionalidade de deletar demandas
-          initExcluirSelecionados(); // Reaplica a funcionalidade de exclusão em massas
           initSelecionarTodos(); // Reaplica a funcionalidade de seleção de todos
           initExcluirMembros(); // Reaplica a funcionalidade de exclusão de membros
           initEditDemandFormEvent(); // Reaplica a funcionalidade de edição de demandas
           verificarDemandas(); // Verifica se há demandas restantes
           initModalDemandas(); // Reaplica a funcionalidade do modal de demandas
+          initExcluirSelecionados(); // Reaplica a funcionalidade de exclusão em massa
+          initModalDetalhes(); // Reaplica a funcionalidade do modal de detalhes
+          initModalConfirmacaoMassa(); // Reaplica a funcionalidade do modal de confirmação em massa
+          initModalConfirmacaoIndividual(); // Reaplica a funcionalidade do modal de confirmação individual
         })
         .catch((error) => console.error("Erro ao carregar a aba:", error));
     });
@@ -1488,6 +1479,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Inicializa eventos da sidebar
   initSidebarEvents();
 
+  initExcluirSelecionados();
+
+  initModalDetalhes();
+
+  initModalConfirmacaoMassa();
+  
+  initModalConfirmacaoIndividual();
+
   // Inicializa eventos dos botões de ação
   verificarDemandas();
 
@@ -1527,91 +1526,256 @@ document.addEventListener("DOMContentLoaded", function () {
 function initModalDemandas() {
   console.log("Inicializando modal de demandas...");
 
-  // Criação dinâmica do overlay e adição ao body
-  const demandaOverlay = document.createElement("div");
-  demandaOverlay.style.position = "fixed";
-  demandaOverlay.style.top = "0";
-  demandaOverlay.style.left = "0";
-  demandaOverlay.style.width = "100%";
-  demandaOverlay.style.height = "100%";
-  demandaOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.3)"; // Fundo menos escuro
-  demandaOverlay.style.zIndex = "999"; // Atrás do modal
-  demandaOverlay.style.display = "none"; // Oculto por padrão
-  document.body.appendChild(demandaOverlay);
-
   // Seleção do modal e seus elementos internos
   const demandaModal = document.getElementById("demandaModal");
-  const modalContent = demandaModal.querySelector(".modal-demandas-content");
+  const demandaOverlay = document.getElementById("demandaOverlay"); // Deve existir no HTML
+  const modalContent = demandaModal ? demandaModal.querySelector(".modal-demandas-content") : null;
   const modalTitulo = document.getElementById("demanda-modal-titulo");
   const modalDescricao = document.getElementById("demanda-modal-descricao");
   const modalStatus = document.getElementById("demanda-modal-status");
   const modalUrgencia = document.getElementById("demanda-modal-urgencia");
   const modalData = document.getElementById("demanda-modal-data");
   const modalSolicitante = document.getElementById("demanda-modal-solicitante");
+  const closeButton = demandaModal ? demandaModal.querySelector(".close-demandas-button") : null;
 
-  const closeButton = document.querySelector(".close-demandas-button");
+  if (!demandaModal || !demandaOverlay || !modalContent) {
+    console.error("Erro: Elementos do modal não encontrados.");
+    return;
+  }
 
   // Estilização inicial do modal para animação
   modalContent.style.opacity = "0";
   modalContent.style.transform = "scale(0.9)";
   modalContent.style.transition = "opacity 0.3s ease, transform 0.3s ease";
 
-  // Abrir modal ao clicar no título da demanda
-  document.querySelectorAll(".abrir-modal").forEach((item) => {
-    item.addEventListener("click", (event) => {
-      event.preventDefault();
+  // Delegação de evento: Captura cliques nos elementos que abrirão o modal
+  document.addEventListener("click", (event) => {
+    const target = event.target.closest(".abrir-modal"); // Procura um elemento com a classe .abrir-modal
+    if (!target) return;
 
-      // Obter os dados da demanda
-      const demanda = event.target.closest(".demanda");
-      if (demanda) {
-        modalTitulo.textContent = demanda.getAttribute("data-titulo");
-        modalDescricao.textContent = demanda.getAttribute("data-descricao");
-        modalStatus.textContent = demanda.getAttribute("data-status");
-        modalUrgencia.textContent = demanda.getAttribute("data-urgencia");
-        modalData.textContent = demanda.getAttribute("data-data");
-        modalSolicitante.textContent = demanda.getAttribute("data-solicitante");
+    event.preventDefault();
+    console.log("Clique detectado em uma demanda!");
 
-        // Exibir o fundo escuro imediatamente
-        demandaOverlay.style.display = "block";
+    // Obtendo os dados da demanda
+    const demanda = target.closest(".demanda"); // Procura o elemento com os dados da demanda
+    if (!demanda) {
+      console.error("Erro: Elemento da demanda não encontrado.");
+      return;
+    }
 
-        // Exibir o modal
-        demandaModal.style.display = "block";
+    // Pegando as informações e preenchendo o modal
+    modalTitulo.textContent = demanda.getAttribute("data-titulo") || "Sem título";
+    modalDescricao.textContent = demanda.getAttribute("data-descricao") || "Sem descrição";
+    modalStatus.textContent = demanda.getAttribute("data-status") || "Sem status";
+    modalUrgencia.textContent = demanda.getAttribute("data-urgencia") || "Sem urgência";
+    modalData.textContent = demanda.getAttribute("data-data") || "Sem data";
+    modalSolicitante.textContent = demanda.getAttribute("data-solicitante") || "Desconhecido";
 
-        // Aplicar o efeito suave ao modal-content
-        setTimeout(() => {
-          modalContent.style.opacity = "1";
-          modalContent.style.transform = "scale(1)";
-        }, 10); // Pequeno atraso para ativar a transição
-      }
+    console.log("Dados preenchidos no modal:", {
+      titulo: modalTitulo.textContent,
+      descricao: modalDescricao.textContent,
+      status: modalStatus.textContent,
+      urgencia: modalUrgencia.textContent,
+      data: modalData.textContent,
+      solicitante: modalSolicitante.textContent,
     });
+
+    // Exibir o fundo escuro e o modal
+    demandaOverlay.classList.remove("hidden");
+    demandaModal.classList.remove("hidden");
+
+    console.log("Classes 'hidden' removidas. Exibindo o modal...");
+
+    // Aplicar o efeito suave ao modal-content
+    setTimeout(() => {
+      modalContent.style.opacity = "1";
+      modalContent.style.transform = "scale(1)";
+      console.log("Efeito de transição aplicado.");
+    }, 10);
   });
 
-  // Fechar o modal
-  const fecharModal = () => {
-    // Ocultar o modal-content com animação
+  // Fechar o modal ao clicar no botão de fechar
+  closeButton.addEventListener("click", () => {
+    console.log("Botão de fechar clicado.");
+    fecharModal();
+  });
+
+  // Fechar o modal ao clicar no overlay
+  demandaOverlay.addEventListener("click", () => {
+    console.log("Overlay clicado.");
+    fecharModal();
+  });
+
+  // Fechar o modal ao clicar fora do modal-content
+  window.addEventListener("click", (event) => {
+    if (event.target === demandaModal && !modalContent.contains(event.target)) {
+      console.log("Clique fora do conteúdo do modal.");
+      fecharModal();
+    }
+  });
+
+  /**
+   * Função para fechar o modal
+   */
+  function fecharModal() {
+    console.log("Fechando modal...");
     modalContent.style.opacity = "0";
     modalContent.style.transform = "scale(0.9)";
 
     // Após a transição, esconder o modal e o fundo escuro
     setTimeout(() => {
-      demandaModal.style.display = "none";
-      demandaOverlay.style.display = "none";
-    }, 300); // Tempo da transição
-  };
+      demandaModal.classList.add("hidden");
+      demandaOverlay.classList.add("hidden");
+      console.log("Modal e overlay escondidos.");
+    }, 300);
+  }
+}
 
-  closeButton.addEventListener("click", fecharModal);
 
-  // Fechar o modal ao clicar no fundo (overlay)
-  demandaOverlay.addEventListener("click", fecharModal);
+// ======================================================
 
-  // Fechar o modal ao clicar fora do modal-content
-  window.addEventListener("click", (event) => {
-    if (event.target === demandaModal && !modalContent.contains(event.target)) {
-      fecharModal();
+
+
+function initModalDetalhes() {
+  const detalhesModal = document.getElementById("detalhesModal");
+  const detalhesOverlay = detalhesModal; // Usando a mesma div para overlay e modal
+  const closeDetalhesBtn = detalhesModal.querySelector(".close-modal");
+
+  document.querySelectorAll(".ver-mais").forEach((button) => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const demandaId = this.getAttribute("data-id");
+      // Aqui você pode buscar mais detalhes via AJAX, se necessário
+      // Para simplificação, estamos usando os dados já presentes no HTML
+
+      const demandaRow = document.getElementById(`demanda-${demandaId}`);
+      const titulo = demandaRow.querySelector(".demanda-titulo").textContent;
+      const status = demandaRow.querySelector(".demanda-detalhes p:nth-child(1)").textContent;
+      const data = demandaRow.querySelector(".demanda-detalhes p:nth-child(2)").textContent;
+      // Supondo que urgência e descrição estejam disponíveis; ajuste conforme necessário
+      // Se não estiverem, você pode adicionar mais dados no HTML ou buscar via AJAX
+
+      document.getElementById("detalhes-titulo").textContent = titulo;
+      document.getElementById("detalhes-status").textContent = status;
+      document.getElementById("detalhes-data").textContent = data;
+      // Adicione outros campos conforme necessário
+
+      detalhesModal.classList.remove("hidden");
+      setTimeout(() => {
+        detalhesModal.querySelector(".modal-demandas-content").style.opacity = "1";
+        detalhesModal.querySelector(".modal-demandas-content").style.transform = "scale(1)";
+      }, 10);
+    });
+  });
+
+  closeDetalhesBtn.addEventListener("click", () => {
+    fecharModal(detalhesModal);
+  });
+
+  detalhesOverlay.addEventListener("click", (event) => {
+    if (event.target === detalhesModal) {
+      fecharModal(detalhesModal);
     }
   });
 }
 
-// ======================================================
+function initModalConfirmacaoIndividual() {
+  const confirmacaoModal = document.getElementById("confirmacaoModal");
+  const confirmacaoOverlay = confirmacaoModal; // Usando a mesma div para overlay e modal
+  const confirmarBtn = document.getElementById("confirmarExclusao");
+  const cancelarBtn = document.getElementById("cancelarExclusao");
+  let demandaIdParaExcluir = null;
 
+  document.querySelectorAll(".deletar").forEach((button) => {
+    button.addEventListener("click", function () {
+      demandaIdParaExcluir = this.getAttribute("data-id");
+      if (!demandaIdParaExcluir) {
+        console.error("ID da demanda para exclusão não encontrado.");
+        return;
+      }
+      confirmacaoModal.classList.remove("hidden");
+      setTimeout(() => {
+        confirmacaoModal.querySelector(".modall-content").style.opacity = "1";
+        confirmacaoModal.querySelector(".modall-content").style.transform = "scale(1)";
+      }, 10);
+    });
+  });
+
+  confirmarBtn.addEventListener("click", () => {
+    if (!demandaIdParaExcluir) return;
+
+    // Exemplo: Remover a demanda do DOM (substitua com a lógica de exclusão real)
+    const demandaRow = document.getElementById(`demanda-${demandaIdParaExcluir}`);
+    if (demandaRow) {
+      demandaRow.classList.add("fade-out");
+      setTimeout(() => {
+        demandaRow.remove();
+      }, 500);
+    }
+
+    showNotification("Demanda excluída com sucesso!", "success");
+    fecharModal(confirmacaoModal);
+    demandaIdParaExcluir = null;
+  });
+
+  cancelarBtn.addEventListener("click", () => {
+    fecharModal(confirmacaoModal);
+    demandaIdParaExcluir = null;
+  });
+
+  confirmacaoOverlay.addEventListener("click", (event) => {
+    if (event.target === confirmacaoModal) {
+      fecharModal(confirmacaoModal);
+      demandaIdParaExcluir = null;
+    }
+  });
+}
+
+function initModalConfirmacaoMassa() {
+  const confirmacaoMassaModal = document.getElementById("confirmacaoMassaModal");
+  const confirmarMassaBtn = document.getElementById("confirmarExclusaoMassa");
+  const cancelarMassaBtn = document.getElementById("cancelarExclusaoMassa");
+
+  confirmarMassaBtn.addEventListener("click", () => {
+    // Exemplo: Remover todas as demandas selecionadas do DOM (substitua com a lógica real)
+    document.querySelectorAll(".demanda-checkbox:checked").forEach((checkbox) => {
+      const demandaId = checkbox.getAttribute("data-id");
+      const demandaRow = document.getElementById(`demanda-${demandaId}`);
+      if (demandaRow) {
+        demandaRow.classList.add("fade-out");
+        setTimeout(() => {
+          demandaRow.remove();
+        }, 500);
+      }
+    });
+
+    showNotification("Demandas selecionadas excluídas com sucesso!", "success");
+    fecharModal(confirmacaoMassaModal);
+    atualizarBotaoExcluirSelecionados();
+  });
+
+  cancelarMassaBtn.addEventListener("click", () => {
+    fecharModal(confirmacaoMassaModal);
+  });
+
+  document.getElementById("excluirSelecionados").addEventListener("click", () => {
+    confirmacaoMassaModal.classList.remove("hidden");
+    setTimeout(() => {
+      confirmacaoMassaModal.querySelector(".modalll-content").style.opacity = "1";
+      confirmacaoMassaModal.querySelector(".modalll-content").style.transform = "scale(1)";
+    }, 10);
+  });
+
+  confirmacaoMassaModal.querySelector(".modalll-content").querySelectorAll(".modal-buttonL, .modal-buttonM").forEach((button) => {
+    button.addEventListener("click", () => {
+      // Já estão definidos acima
+    });
+  });
+
+  confirmacaoMassaModal.addEventListener("click", (event) => {
+    if (event.target === confirmacaoMassaModal) {
+      fecharModal(confirmacaoMassaModal);
+    }
+  });
+}
 

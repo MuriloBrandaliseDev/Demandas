@@ -104,6 +104,8 @@
       text-decoration: none;
     }
 
+
+
     .sem-demanda {
       color: #999;
       font-style: italic;
@@ -150,15 +152,6 @@
 
     }
 
-    .modal-demandas-content {
-      background: white;
-      margin: 15% auto;
-      padding: 20px;
-      border-radius: 5px;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-    }
 
     .modal-demandas-content h3 {
       font-size: 20px;
@@ -191,6 +184,54 @@
     .icon {
       margin-right: 8px;
     }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Estilos para o Overlay */
+    #demandaOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Fundo semi-transparente */
+      z-index: 1000;
+      /* Deve estar acima de outros elementos */
+    }
+
+    /* Estilos para o Modal */
+    #demandaModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 50px;
+      border-radius: 8px;
+      z-index: 1001;
+      /* Deve estar acima do overlay */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Conteúdo do Modal */
+    .modal-demandas-content {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Botão de Fechar */
+    .close-demandas-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
 
 
     /* Responsividade */
@@ -260,45 +301,27 @@
       <div class="dias">
         {% for dia in mes.dias %}
         <div class="dia">
+          {% if dia.dia %}
           <div class="numero-dia">{{ dia.dia }}</div>
           <div class="demandas">
             {% for demanda in dia.demandas %}
-            <div class="demanda" title="{{ demanda.descricao }}" data-demanda-id="{{ demanda.id }}" class="demanda"
-              title="{{ demanda.descricao }}" data-titulo="{{ demanda.titulo_projeto }}"
-              data-descricao="{{ demanda.descricao }}" data-status="{{ demanda.get_status_display }}"
-              data-urgencia="{{ demanda.get_urgencia_display }}" data-data="{{ demanda.data_criacao|date:'d/m/Y H:i' }}"
-              data-solicitante="{{ demanda.nome_solicitante }}">
+            <div class="demanda" title="{{ demanda.descricao }}" data-demanda-id="{{ demanda.id }}"
+              data-titulo="{{ demanda.titulo_projeto }}" data-descricao="{{ demanda.descricao }}"
+              data-status="{{ demanda.get_status_display }}" data-urgencia="{{ demanda.get_urgencia_display }}"
+              data-data="{{ demanda.data_demanda|date:'d/m/Y' }}" data-solicitante="{{ demanda.nome_solicitante }}">
               <a href="#" class="abrir-modal">
                 {{ demanda.titulo_projeto }} <i class="fa-solid fa-star"></i>
               </a>
             </div>
             {% empty %}
-
+            <!-- Mensagem quando não há demandas -->
             {% endfor %}
           </div>
-
-
-          <div id="demandaOverlay" class="modal-overlay hidden"></div> <!-- Fundo escuro -->
-          <div id="demandaModal" class="modal-demandas hidden">
-            <div class="modal-demandas-content">
-              <!-- Botão para fechar o modal -->
-              <span class="close-demandas-button">&times;</span>
-
-              <h3>
-                Detalhes da <span style="color: rgb(0, 194, 107)">Demanda</span>
-                <i style="margin-left: 15px; font-size: 17px" class="fa-solid fa-circle-info"></i>
-              </h3>
-
-              <!-- Informações detalhadas da demanda -->
-              <p><strong>Título:</strong> <span id="demanda-modal-titulo"></span></p>
-              <p><strong>Status:</strong> <span id="demanda-modal-status"></span></p>
-              <p><strong>Urgência:</strong> <span id="demanda-modal-urgencia"></span></p>
-              <p><strong>Data de Criação:</strong> <span id="demanda-modal-data"></span></p>
-              <p><strong>Descrição:</strong> <span id="demanda-modal-descricao"></span></p>
-              <p><strong>Solicitante:</strong> <span id="demanda-modal-solicitante"></span></p>
-            </div>
-          </div>
-
+          {% else %}
+          <!-- Célula vazia para alinhar os dias -->
+          <div class="numero-dia"></div>
+          <div class="demandas"></div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
@@ -306,6 +329,34 @@
     {% endfor %}
   </div>
 
+  <!-- ======================================================
+                    Modal de Detalhes da Demanda (Definido uma vez)
+  ====================================================== -->
+  <div id="demandaOverlay" class="modal-overlay hidden"></div> <!-- Fundo escuro -->
+  <div id="demandaModal" class="hidden">
+    <div class="modal-demandas-content">
+      <!-- Botão para fechar o modal -->
+      <span class="close-demandas-button">&times;</span>
+
+      <h3>
+        Detalhes da <span style="color: rgb(0, 194, 107)">Demanda</span>
+        <i style="margin-left: 15px; font-size: 17px" class="fa-solid fa-circle-info"></i>
+      </h3>
+
+      <!-- Informações detalhadas da demanda -->
+      <p><strong>Título:</strong> <span id="demanda-modal-titulo"></span></p>
+      <p><strong>Status:</strong> <span id="demanda-modal-status"></span></p>
+      <p><strong>Urgência:</strong> <span id="demanda-modal-urgencia"></span></p>
+      <p><strong>Data da Demanda:</strong> <span id="demanda-modal-data"></span></p>
+      <p><strong>Descrição:</strong> <span id="demanda-modal-descricao"></span></p>
+      <p><strong>Solicitante:</strong> <span id="demanda-modal-solicitante"></span></p>
+    </div>
+  </div>
+
+
+  <!-- ======================================================
+                         Scripts
+  ====================================================== -->
   <script src="{% static 'js/script.js' %}"></script>
 </body>
 

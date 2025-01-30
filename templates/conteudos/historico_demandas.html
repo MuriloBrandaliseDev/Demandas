@@ -373,23 +373,23 @@
   <body>
     <!-- ======================================================
                       Container Histórico de Demandas
-  ====================================================== -->
+    ====================================================== -->
     <div class="historico-container">
       <h2>
         Histórico de <span style="color: rgb(0, 194, 107)">Demandas</span>
       </h2>
-
+  
       <!-- Botão para excluir demandas selecionadas -->
       <button id="excluirSelecionados" class="excluir-selecionados" disabled>
         Excluir Selecionados
       </button>
-
+  
       <!-- Checkbox para selecionar todas as demandas -->
       <div>
         <input type="checkbox" id="selecionarTodos" />
         <label for="selecionarTodos">Selecionar Todos</label>
       </div>
-
+  
       <!-- Lista de Demandas -->
       <div class="demandas-list">
         {% for demanda in demandas_concluidas %}
@@ -400,10 +400,10 @@
             class="demanda-checkbox"
             data-id="{{ demanda.id }}"
           />
-
+  
           <!-- Título da demanda -->
           <div class="demanda-titulo">{{ demanda.titulo_projeto }}</div>
-
+  
           <!-- Detalhes da demanda -->
           <div class="demanda-detalhes">
             <p>
@@ -413,28 +413,34 @@
               <strong><i class="fa-solid fa-calendar-days"></i></strong> {{ demanda.data_criacao|date:"d/m/Y H:i" }}
             </p>
           </div>
-
+  
           <!-- Botão para ver mais detalhes -->
           <button class="ver-mais" data-id="{{ demanda.id }}">
             <i class="fa-solid fa-plus"></i>
           </button>
-
+  
           <!-- Botão para deletar a demanda -->
           <button class="deletar" data-id="{{ demanda.id }}">
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        {% endfor %}      
+        {% empty %}
+        <!-- Mensagem quando não há demandas concluídas -->
+        <div id="no-demanda-message" class="no-demandas hidden">
+          Nenhuma demanda concluída encontrada.
+        </div>
+        {% endfor %}
+      </div>
     </div>
-
+  
     <!-- ======================================================
-                      Modal de Detalhes da Demanda
-  ====================================================== -->
+                  Modal de Detalhes da Demanda (Definido uma vez)
+    ====================================================== -->
     <div id="detalhesModal" class="modal hidden">
       <div class="modal-content">
         <!-- Botão para fechar o modal -->
         <span class="close-modal">&times;</span>
-
+  
         <h3>
           Detalhes da <span style="color: rgb(0, 194, 107)">Demanda</span>
           <i
@@ -442,7 +448,7 @@
             class="fa-solid fa-circle-info"
           ></i>
         </h3>
-
+  
         <!-- Informações detalhadas da demanda -->
         <p id="detalhes-titulo"></p>
         <p id="detalhes-status"></p>
@@ -451,10 +457,10 @@
         <p id="detalhes-descricao"></p>
       </div>
     </div>
-
+  
     <!-- ======================================================
-               Modal de Confirmação para Exclusão em Massa
-  ====================================================== -->
+                  Modal de Confirmação para Exclusão em Massa
+    ====================================================== -->
     <div id="confirmacaoMassaModal" class="modalll hidden">
       <div class="modalll-content">
         <h1>Quero<span style="color: rgb(0, 194, 107)">lar</span></h1>
@@ -469,10 +475,10 @@
         </button>
       </div>
     </div>
-
+  
     <!-- ======================================================
-               Modal de Confirmação para Exclusão Individual
-  ====================================================== -->
+                  Modal de Confirmação para Exclusão Individual
+    ====================================================== -->
     <div id="confirmacaoModal" class="modall hidden">
       <div class="modall-content">
         <h1>Quero<span style="color: rgb(0, 194, 107)">lar</span></h1>
@@ -485,12 +491,13 @@
         <button id="cancelarExclusao" class="modal-buttonc">Cancelar</button>
       </div>
     </div>
-
+  
     <div id="notification" class="notification"></div>
-
+  
     <!-- ======================================================
-                             Scripts
-  ====================================================== -->
+                           Scripts
+    ====================================================== -->
     <script src="{% static 'js/script.js' %}"></script>
   </body>
-</html>
+  
+  </html>

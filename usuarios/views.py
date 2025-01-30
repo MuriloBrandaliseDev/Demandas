@@ -138,7 +138,7 @@ def calendario(request):
     View para exibir o calendário com demandas cadastradas.
     """
     if request.headers.get('x-requested_with') == 'XMLHttpRequest':
-        ano = datetime.now().year
+        ano = 2025  # Definindo o ano para 2025
         
         # Lista de nomes dos meses em Português Brasileiro
         meses_pt_br = [
@@ -160,18 +160,32 @@ def calendario(request):
                 demandas_por_mes_dia[mes][dia] = []
             demandas_por_mes_dia[mes][dia].append(demanda)
         
-        # Preparar lista de meses com nome e dias
+        # Preparar lista de meses com nome, dias e primeiro dia da semana
         meses = []
         for mes_num in range(1, 13):
             nome_mes = meses_pt_br[mes_num - 1]
-            dias_no_mes = calendar.monthrange(ano, mes_num)[1]
+            primeiro_dia_semana, dias_no_mes = calendar.monthrange(ano, mes_num)
+            
+            # Ajuste: Convertendo de segunda=0,..., domingo=6 para domingo=0,..., sábado=6
+            primeiro_dia_semana = (primeiro_dia_semana + 1) % 7
+            
             dias = []
+            
+            # Inserir células vazias para alinhar o primeiro dia
+            for _ in range(primeiro_dia_semana):
+                dias.append({'dia': None, 'demandas': []})
+            
             for dia in range(1, dias_no_mes + 1):
                 demandas_do_dia = demandas_por_mes_dia.get(mes_num, {}).get(dia, [])
                 dias.append({
                     'dia': dia,
                     'demandas': demandas_do_dia
                 })
+            
+            # Opcional: Inserir células vazias no final para completar a última semana
+            while len(dias) % 7 != 0:
+                dias.append({'dia': None, 'demandas': []})
+            
             meses.append({
                 'nome': nome_mes,
                 'dias': dias
@@ -283,6 +297,7 @@ def editar_demanda(request, demanda_id):
             nome_solicitante = request.POST.get("nome_solicitante")
             categoria = request.POST.get("categoria")
             taxa_urgencia = request.POST.get("taxa_urgencia")  # Certifique-se de que este campo está presente no formulário
+            data_demanda_str = request.POST.get("data_demanda")  # Novo campo
 
             # Atualiza os campos da demanda
             demanda.titulo_projeto = titulo
@@ -292,6 +307,12 @@ def editar_demanda(request, demanda_id):
             demanda.nome_solicitante = nome_solicitante
             demanda.categoria = categoria
             demanda.taxa_urgencia = True if taxa_urgencia == "Sim" else False
+
+            # Atualiza a data da demanda
+            if data_demanda_str:
+                # Converte a string para um objeto date
+                data_demanda = datetime.strptime(data_demanda_str, '%Y-%m-%d').date()
+                demanda.data_demanda = data_demanda
 
             # Atualiza o arquivo adicional se houver
             if request.FILES.get("arquivo_adicional"):
@@ -304,6 +325,7 @@ def editar_demanda(request, demanda_id):
                 "message": "Demanda atualizada com sucesso!",
                 "status_display": demanda.get_status_display(),
                 "data_criacao": demanda.data_criacao.strftime("%d/%m/%Y %H:%M"),
+                "data_demanda": demanda.data_demanda.strftime("%d/%m/%Y"),
                 "urgencia_display": demanda.get_urgencia_display(),
                 "taxa_urgencia": "Sim" if demanda.taxa_urgencia else "Não",
                 "categoria": demanda.categoria,
@@ -319,7 +341,6 @@ def editar_demanda(request, demanda_id):
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)})
     return JsonResponse({"success": False, "message": "Método inválido."})
-
 
 # ======================================================
 # 10. Equipe (Conteúdo via AJAX)
