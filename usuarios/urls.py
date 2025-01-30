@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import deletar_demanda
+from .views import gerar_relatorio_excel
 from .views import excluir_membro
 
 urlpatterns = [
@@ -28,6 +29,7 @@ urlpatterns = [
     path('cadastrar-membro/', views.cadastrar_membro, name='cadastrar_membro'),
     path('excluir-membro/<int:membro_id>/', excluir_membro, name='excluir_membro'),
     path('editar-membro/<int:membro_id>/', views.editar_membro, name='editar_membro'),
+    path("gerar-relatorio/", gerar_relatorio_excel, name="gerar_relatorio"),
     
     
     

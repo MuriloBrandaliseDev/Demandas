@@ -156,6 +156,23 @@
         .excluido {
             background-color: red;
         }
+
+        .btn-relatorio {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #27ae60;
+    border: none;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-relatorio:hover {
+    background-color: #219150;
+}
     </style>
 </head>
 
@@ -165,6 +182,8 @@
     <div class="container">
         <!-- Título -->
         <h1 class="dashboard-title"> Dashboard</h1>
+        <a href="/gerar-relatorio/" class="btn-relatorio">📊 Baixar Relatório Excel</a>
+
 
         <!-- Contadores -->
         <div class="dashboard-container">
@@ -202,6 +221,12 @@
             </ul>
         </div>
     </div>    
+
+    <script>
+        document.getElementById("gerarRelatorio").addEventListener("click", function () {
+            window.location.href = "/gerar-relatorio/";
+        });
+    </script>
 </body>
 
 </html>

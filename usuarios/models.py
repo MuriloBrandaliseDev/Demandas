@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.timezone import now
 
 
 class Usuario(AbstractUser):
@@ -114,11 +115,11 @@ class Demanda(models.Model):
     )
     data_criacao = models.DateTimeField(
         verbose_name="Data de Criação",
-        default=timezone.now  # Atualizado para permitir edição
+        default=timezone.now  # ✅ Certo: `DateTimeField` pode receber `timezone.now()`
     )
     data_demanda = models.DateField(
         verbose_name="Data da Demanda",
-        default=timezone.now  # Atualizado para usar timezone.now
+        default=timezone.localdate  # ✅ Corrigido: `DateField` deve receber `localdate()`
     )
     nome_solicitante = models.CharField(
         max_length=255, 

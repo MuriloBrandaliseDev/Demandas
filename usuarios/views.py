@@ -178,8 +178,85 @@ def dashboard(request):
 
     return render(request, "dashboard.html", context)
 
-    
 
+# ======================================================
+import pandas as pd
+from django.http import HttpResponse
+from .models import Demanda, Usuario, Membro
+from django.utils.timezone import now
+import os
+
+def gerar_relatorio_excel(request):
+    """
+    Gera um relatório em Excel com os dados do Dashboard e as demandas recentes.
+    """
+    hoje = now().date()
+    primeiro_dia_mes = hoje.replace(day=1)
+
+    # 📊 Dados do Dashboard
+    dados_dashboard = {
+        "Métrica": [
+            "Total de Demandas",
+            "Demandas no Mês",
+            "Demandas Concluídas",
+            "Demandas Excluídas",
+            "Usuários Cadastrados",
+            "Membros Cadastrados"
+        ],
+        "Quantidade": [
+            Demanda.objects.exclude(status="excluido").count(),
+            Demanda.objects.filter(data_criacao__gte=primeiro_dia_mes).count(),
+            Demanda.objects.filter(status="concluido", data_criacao__gte=primeiro_dia_mes).count(),
+            Demanda.objects.filter(status="excluido", data_criacao__gte=primeiro_dia_mes).count(),
+            Usuario.objects.count(),
+            Membro.objects.filter(ativo=True).count()
+        ]
+    }
+
+    # 📌 Criando DataFrame para o Dashboard
+    df_dashboard = pd.DataFrame(dados_dashboard)
+
+    # 📌 Demandas Recentes (garantindo que não fique vazio)
+    demandas = Demanda.objects.order_by('-data_criacao')[:10]  # Últimas 10 demandas
+
+    if demandas.exists():
+        dados_demandas = [
+            {
+                "ID": d.id,
+                "Título": d.titulo_projeto,
+                "Status": d.get_status_display(),
+                "Urgência": d.get_urgencia_display(),
+                "Data Criação": d.data_criacao.strftime("%d/%m/%Y"),
+                "Data Entrega": d.data_entrega.strftime("%d/%m/%Y") if hasattr(d, "data_entrega") and d.data_entrega else "Sem data",
+                "Solicitante": d.nome_solicitante,
+                "Categoria": d.categoria if d.categoria else "Não informado",
+            }
+            for d in demandas
+        ]
+        df_demandas = pd.DataFrame(dados_demandas)
+    else:
+        df_demandas = pd.DataFrame(columns=["ID", "Título", "Status", "Urgência", "Data Criação", "Data Entrega", "Solicitante", "Categoria"])
+
+    # 📌 Criando o arquivo Excel temporário
+    caminho_arquivo = "relatorio_dashboard.xlsx"
+    with pd.ExcelWriter(caminho_arquivo, engine="xlsxwriter") as writer:
+        df_dashboard.to_excel(writer, sheet_name="Dashboard", index=False)
+        df_demandas.to_excel(writer, sheet_name="Demandas Recentes", index=False)
+
+    # 📌 Lendo o arquivo salvo e enviando para download
+    with open(caminho_arquivo, "rb") as arquivo:
+        response = HttpResponse(arquivo.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = 'attachment; filename="relatorio_dashboard.xlsx"'
+
+    # 🔴 Remove o arquivo do servidor após o download
+    os.remove(caminho_arquivo)
+
+    return response
+
+
+
+
+# ======================================================
 # usuarios/views.py
 
 from django.shortcuts import render
