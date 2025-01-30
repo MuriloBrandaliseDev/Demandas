@@ -73,10 +73,6 @@ O sistema foi desenvolvido utilizando as seguintes tecnologias:
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests no repositório. 🛠️
 
-## 📜 Licença
-
-Este projeto está licenciado sob a licença [MIT](LICENSE). 📄
-
 ---
 
 **Desenvolvido por Murilo Brandalise** 💡
